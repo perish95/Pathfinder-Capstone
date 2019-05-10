@@ -12,7 +12,7 @@
         android:layout_marginTop="139dp"
         android:layout_marginBottom="29dp"
         android:ems="10"
-        android:hint="ID"
+        android:hint="email"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/pwText"
         app:layout_constraintEnd_toEndOf="parent"

@@ -2,16 +2,37 @@ package com.example.capstone;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    private FirebaseAuth firebaseAuth;
 
+    private EditText email_login;
+    private EditText pwd_login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        firebaseAuth = firebaseAuth.getInstance();
 
         final Button loginButton = (Button) findViewById(R.id.loginButton);
         final Button signupButton = (Button) findViewById(R.id.signupButton);
@@ -19,8 +40,15 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
-                startActivity(intent);
+                email_login = (EditText) findViewById(R.id.idText);
+                pwd_login = (EditText) findViewById(R.id.pwText);
+                if(TextUtils.isEmpty(email_login.getText().toString().trim()) || TextUtils.isEmpty(pwd_login.getText().toString().trim()))
+                    Toast.makeText(MainActivity.this, "ID, PASSWORD를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                else
+                    signIn();
+                //Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
+                //startActivity(intent);
+                //databaseReference.child("message").push().setValue("2");
             }
         });
 
@@ -34,4 +62,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    public void signIn() {
+        String email = email_login.getText().toString().trim();
+        String pwd = pwd_login.getText().toString().trim();
+        loginUser(email, pwd);
+        //Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
+        //startActivity(intent);
+    }
+
+    // 로그인
+    private void loginUser(String email, String password)
+    {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // 로그인 성공
+                            Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+                            startActivity(intent);
+
+                        } else {
+                            // 로그인 실패
+                            Toast.makeText(MainActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 }

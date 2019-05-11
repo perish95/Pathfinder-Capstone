@@ -72,7 +72,8 @@ public class FriendActivity extends AppCompatActivity {
 
     private void DialogRequest(String partner){
         AlertDialog.Builder requestAlt = new AlertDialog.Builder(this);
-        requestAlt.setMessage(partner + "님에게 만남을 신청하시겠습니까?").setCancelable(false).setPositiveButton("예",
+        //int currentPos = getPosition(); currentPos는 현재 자신의 위치 뒤에 들어갈 예정
+        requestAlt.setMessage("현재 자신의 위치\n" + partner + "님에게 만남을 신청하시겠습니까?").setCancelable(false).setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -85,11 +86,21 @@ public class FriendActivity extends AppCompatActivity {
                 //Click "No"
                 dialog.cancel();
             }
+        }).setNeutralButton("위치 재검색", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Click "Research"
+                //getPosition();
+            }
         });
 
         AlertDialog alert = requestAlt.create();
         alert.setTitle("Test");
         alert.setIcon(R.drawable.ic_launcher_background);
         alert.show();
+    }
+
+    void getPosition(){
+        //메소드 타입은 위치 정보의 타입에 따라 갈림
     }
 }

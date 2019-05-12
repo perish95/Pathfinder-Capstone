@@ -21,10 +21,14 @@ import static android.R.layout.simple_list_item_1;
 public class FriendActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle bundle){
-        Log.v("확인","FriendActivity 시작 확인 ***********************************");
         super.onCreate(bundle);
         setContentView(R.layout.activity_friend);
+
         Intent recv = getIntent();//SearchFriendActivity에서 데이터를 받는 intent 객체
+        //user = (User) recv.getParcelableExtra("User");
+        if ((User)recv.getSerializableExtra("sentUser") != null)
+            Log.d("CHECK", "catch : " + (User)recv.getSerializableExtra("User"));
+
         Button addButton = (Button)findViewById(R.id.addButton);
         String[] temp = { "버너스리","장노이만", "박욘베", "킴선동", "안산피앙세", "우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세"};
         ArrayList<String> items = new ArrayList<>();

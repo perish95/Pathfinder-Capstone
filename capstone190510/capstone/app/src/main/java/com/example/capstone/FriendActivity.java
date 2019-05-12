@@ -13,8 +13,10 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static android.R.layout.simple_list_item_1;
 
@@ -33,11 +35,15 @@ public class FriendActivity extends AppCompatActivity {
             Log.d("CHECK","catch(FriendActivity) : " + user.get_id());
         }
 
-        Button addButton = (Button)findViewById(R.id.addButton);
-        String[] temp = { "버너스리","장노이만", "박욘베", "킴선동", "안산피앙세", "우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세"};
-        ArrayList<String> items = new ArrayList<>();
+        user._friendList.add("dummy12");
+        user._friendList.add("dummy13");
 
-        Collections.addAll(items, temp); //test용
+        Button addButton = (Button)findViewById(R.id.addButton);
+        //String[] temp = { "버너스리","장노이만", "박욘베", "킴선동", "안산피앙세", "우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세"};
+        //ArrayList<String> items = new ArrayList<>();
+        List<String> items = user._friendList;
+
+        //Collections.addAll(items, temp); //test용
         ListAdapter adapter = new ArrayAdapter<String>(this, simple_list_item_1, items);
         final ListView listView = (ListView) findViewById(R.id.friendListView);
         listView.setAdapter(adapter);

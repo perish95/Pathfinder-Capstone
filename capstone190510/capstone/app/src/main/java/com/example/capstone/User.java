@@ -7,11 +7,11 @@ import java.util.List;
 public class User implements Serializable {
     public int _number;
     public String _name;
+    public List<String> _friendList; //새로 추가됬음 190507
 
     private String _id;
     private String _password;
     private String _nickname;
-    private List<String> _friendList; //새로 추가됬음 190507
 
     //private static final long serialVersionUID = 1L;
 
@@ -22,6 +22,7 @@ public class User implements Serializable {
         _name = name;
         _nickname = nickname;
         _friendList = new ArrayList<>();
+        _friendList.add(""); // friendlist를 서버에 만들기 위해 빈값을 넣어줌
     }
     User(){
         //Default Constructor
@@ -33,6 +34,7 @@ public class User implements Serializable {
     public String get_password(){
         return _password;
     }
-    public List<String> get_friendList(){ return _friendList; }
     public String get_nickname(){ return _nickname; }
+
+    //public List<String> get_friendList(){ return _friendList; }
 }

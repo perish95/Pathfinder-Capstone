@@ -13,7 +13,7 @@ public class User implements Serializable {
     private String _nickname;
     private List<String> _friendList; //새로 추가됬음 190507
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     User(String number, String id, String password, String name, String nickname) {
         _number = Integer.parseInt(number);

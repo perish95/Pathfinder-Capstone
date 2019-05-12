@@ -19,6 +19,8 @@ import java.util.Collections;
 import static android.R.layout.simple_list_item_1;
 
 public class FriendActivity extends AppCompatActivity {
+    private User user;
+
     @Override
     protected void onCreate(Bundle bundle){
         super.onCreate(bundle);
@@ -26,8 +28,10 @@ public class FriendActivity extends AppCompatActivity {
 
         Intent recv = getIntent();//SearchFriendActivity에서 데이터를 받는 intent 객체
         //user = (User) recv.getParcelableExtra("User");
-        if ((User)recv.getSerializableExtra("sentUser") != null)
-            Log.d("CHECK", "catch : " + (User)recv.getSerializableExtra("User"));
+        if ((User)recv.getSerializableExtra("SentUser") != null) {
+            user = (User) recv.getSerializableExtra("SentUser");
+            Log.d("CHECK","catch(FriendActivity) : " + user.get_id());
+        }
 
         Button addButton = (Button)findViewById(R.id.addButton);
         String[] temp = { "버너스리","장노이만", "박욘베", "킴선동", "안산피앙세", "우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세"};

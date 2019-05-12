@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     private DatabaseReference mref = firebaseDatabase.getReference("UserInfo");
     private FirebaseAuth firebaseAuth;
-    private User user;
 
 
     private EditText email_login;
@@ -92,8 +91,12 @@ public class MainActivity extends AppCompatActivity {
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                                         if (email.equals(snapshot.getValue(User.class).get_id())) {
-                                            user = snapshot.getValue(User.class);
-                                            //Log.d("TEST","catch" + user.get_id());
+                                            User user = snapshot.getValue(User.class);
+                                            Log.d("CHECK","catch 1. " + user);
+                                            Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getApplicationContext() , FriendActivity.class);
+                                            intent.putExtra("SentUser" ,user); //FriendActivity에 user값 전달
+                                            startActivity(intent);
                                             break;
                                         }
                                     }
@@ -105,10 +108,6 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
 
-                            Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
-                            intent.putExtra("sentUser",user); //FriendActivity에 user값 전달
-                            startActivity(intent);
 
                         } else {
                             // 로그인 실패

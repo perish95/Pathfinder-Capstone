@@ -16,11 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Pattern;
 
@@ -37,9 +34,8 @@ public class SignupActivity extends AppCompatActivity {
     // 이메일과 비밀번호
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private EditText editTextPhoneNumber;
+    private EditText editTextPhonNumber;
     private EditText editTextName;
-    private EditText editTextNickname;
 
     private String email = "";
     private String password = "";
@@ -55,54 +51,46 @@ public class SignupActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.idText);
         editTextPassword = findViewById(R.id.pwText);
         editTextName = findViewById(R.id.nameText);
-        editTextPhoneNumber= findViewById(R.id.numberText);
-        editTextNickname = findViewById(R.id.nicknameText);
+        editTextPhonNumber= findViewById(R.id.numberText);
 
-        //final EditText numberText = (EditText) findViewById(R.id.numberText);
-        //final EditText idText = (EditText) findViewById(R.id.idText);
-        //final EditText pwText = (EditText) findViewById(R.id.pwText);
-        //final EditText nameText = (EditText) findViewById(R.id.nameText);
-        //final EditText nicknameText = (EditText) findViewById(R.id.nicknameText);
+        final EditText numberText = (EditText) findViewById(R.id.numberText);
+        final EditText idText = (EditText) findViewById(R.id.idText);
+        final EditText pwText = (EditText) findViewById(R.id.pwText);
+        final EditText nameText = (EditText) findViewById(R.id.nameText);
         Button submitButton = (Button) findViewById(R.id.submitButton);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(TextUtils.isEmpty(editTextEmail.getText().toString().trim()) || TextUtils.isEmpty(editTextPassword.getText().toString().trim())
-                  || TextUtils.isEmpty(editTextPhoneNumber.getText().toString().trim()) || TextUtils.isEmpty(editTextName.getText().toString().trim())
-                  || TextUtils.isEmpty(editTextNickname.getText().toString().trim()))
+                  || TextUtils.isEmpty(editTextPhonNumber.getText().toString().trim()) || TextUtils.isEmpty(editTextName.getText().toString().trim()))
                     Toast.makeText(SignupActivity.this, "E-mail, PASSWORD , 이름, 전화번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 else {
-                    signUp();
-                    User temp = new User(editTextPhoneNumber.getText().toString(), editTextEmail.getText().toString(), editTextPassword.getText().toString(),
-                            editTextName.getText().toString(), editTextNickname.getText().toString()); // 서버에 올릴 User의 정보
+                    singUp();
+                    Member temp = new Member(numberText.getText().toString(), idText.getText().toString(), pwText.getText().toString(), nameText.getText().toString());//수정요소가 있음, 임시로 temp로 지정해놓음
                     if(bool==true) {
                         //databaseReference.child("UserInfo").push().setValue(temp);
-
-                        databaseReference.child("/UserInfo/" + temp.get_nickname()).setValue(temp);
-                        /*databaseReference.child("/UserInfo/" + id).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                user = dataSnapshot.getValue(User.class);
-                                Log.d("TEST","=========================================================" + user.get_id());
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });*/
+                        String id = nameText.getText().toString();
+                        databaseReference.child("/UserInfo/" + id).setValue(temp);
                     }
                 }
+
+
+                //String name = nameText.getText().toString();
+                //Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                //intent.putExtra("member", temp);
+                Log.v("확인", "값넘기기");
+               // startActivity(intent);
             }
         });
+
     }
 
-    public void signUp() {
+    public void singUp() {
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
         bool = false;
-        if(isValidEmail() && isValidPassword()) {
+        if(isValidEmail() && isValidPasswd()) {
             createUser(email, password);
             bool = true;
         }
@@ -122,7 +110,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     // 비밀번호 유효성 검사
-    private boolean isValidPassword() {
+    private boolean isValidPasswd() {
         if (password.isEmpty()) {
             // 비밀번호 공백
             return false;
@@ -153,5 +141,4 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }

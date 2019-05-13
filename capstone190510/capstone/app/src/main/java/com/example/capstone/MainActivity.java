@@ -1,6 +1,8 @@
 package com.example.capstone;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText email_login;
     private EditText pwd_login;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Button loginButton = (Button) findViewById(R.id.loginButton);
         final Button signupButton = (Button) findViewById(R.id.signupButton);
+        final Button mapButton = (Button) findViewById(R.id.mapButton);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,11 +61,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
                 startActivity(intent);
             }
         });

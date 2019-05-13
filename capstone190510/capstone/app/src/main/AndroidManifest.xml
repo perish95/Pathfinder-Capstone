@@ -3,6 +3,8 @@
     package="com.example.capstone">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,16 +19,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MapActivity">
+
+        </activity>
         <activity android:name=".SignupActivity">
 
         </activity>
         <activity android:name=".FriendActivity">
 
         </activity>
+
         <activity
             android:name=".SearchFriendActivity"
             android:theme="@android:style/Theme.Dialog">
         </activity>
+
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="87cecb58460a1a4d643813df497c99ef"
+            />
 
     </application>
 

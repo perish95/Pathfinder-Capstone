@@ -34,11 +34,9 @@
             android:theme="@android:style/Theme.Dialog">
         </activity>
 
-
         <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="87cecb58460a1a4d643813df497c99ef"
-            />
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="p4v10ikj41" />
 
     </application>
 

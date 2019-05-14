@@ -13,37 +13,23 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static android.R.layout.simple_list_item_1;
 
 public class FriendActivity extends AppCompatActivity {
-    private User user;
-
     @Override
     protected void onCreate(Bundle bundle){
+        Log.v("확인","FriendActivity 시작 확인 ***********************************");
         super.onCreate(bundle);
         setContentView(R.layout.activity_friend);
-
-        Intent recv = getIntent();
-        //MainActivity에서 user 객체 값 받는 과정
-        if ((User)recv.getSerializableExtra("SentUser") != null) {
-            user = (User) recv.getSerializableExtra("SentUser");
-            Log.d("CHECK","catch(FriendActivity) : " + user.get_id());
-        }
-
-        user._friendList.add("dummy12"); //test 값
-        user._friendList.add("dummy13"); //test 값
-
+        Intent recv = getIntent();//SearchFriendActivity에서 데이터를 받는 intent 객체
         Button addButton = (Button)findViewById(R.id.addButton);
-        //String[] temp = { "버너스리","장노이만", "박욘베", "킴선동", "안산피앙세", "우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세"};
-        //ArrayList<String> items = new ArrayList<>();
-        List<String> items = user._friendList;
+        String[] temp = { "버너스리","장노이만", "박욘베", "킴선동", "안산피앙세", "우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세"};
+        ArrayList<String> items = new ArrayList<>();
 
-        //Collections.addAll(items, temp); //test용
+        Collections.addAll(items, temp); //test용
         ListAdapter adapter = new ArrayAdapter<String>(this, simple_list_item_1, items);
         final ListView listView = (ListView) findViewById(R.id.friendListView);
         listView.setAdapter(adapter);

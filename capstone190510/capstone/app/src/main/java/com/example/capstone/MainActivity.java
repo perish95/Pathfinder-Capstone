@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText email_login;
     private EditText pwd_login;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 email_login = (EditText) findViewById(R.id.idText);
                 pwd_login = (EditText) findViewById(R.id.pwText);
-                if(TextUtils.isEmpty(email_login.getText().toString().trim()) || TextUtils.isEmpty(pwd_login.getText().toString().trim()))
+                if (TextUtils.isEmpty(email_login.getText().toString().trim()) || TextUtils.isEmpty(pwd_login.getText().toString().trim()))
                     Toast.makeText(MainActivity.this, "ID, PASSWORD를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 else
                     signIn();
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivity(intent);
             }
@@ -77,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 로그인
-    private void loginUser(final String email, String password)
-    {
+    private void loginUser(final String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -86,16 +86,17 @@ public class MainActivity extends AppCompatActivity {
                         //String id  =  email.substring(0 ,email.indexOf("@"));
                         if (task.isSuccessful()) {
                             // 로그인 성공
-                            mref.addValueEventListener(new ValueEventListener() {
+
+                            mref.addListenerForSingleValueEvent(new ValueEventListener() { //데이터를 한 번만 읽도록 바꾸어줌
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        Log.d("CHECK", "[MainActivity]catch : " + snapshot);
                                         if (email.equals(snapshot.getValue(User.class).get_id())) {
                                             User user = snapshot.getValue(User.class);
-                                            Log.d("CHECK","catch 1. " + user);
                                             Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(getApplicationContext() , FriendActivity.class);
-                                            intent.putExtra("SentUser" ,user); //FriendActivity에 user값 전달
+                                            Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
+                                            intent.putExtra("SentUser", user); //FriendActivity에 user값 전달
                                             startActivity(intent);
                                             break;
                                         }

@@ -77,21 +77,7 @@ public class SignupActivity extends AppCompatActivity {
                     User temp = new User(editTextPhoneNumber.getText().toString(), editTextEmail.getText().toString(), editTextPassword.getText().toString(),
                             editTextName.getText().toString(), editTextNickname.getText().toString()); // 서버에 올릴 User의 정보
                     if(bool==true) {
-                        //databaseReference.child("UserInfo").push().setValue(temp);
-
                         databaseReference.child("/UserInfo/" + temp.get_nickname()).setValue(temp);
-                        /*databaseReference.child("/UserInfo/" + id).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                user = dataSnapshot.getValue(User.class);
-                                Log.d("TEST","=========================================================" + user.get_id());
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });*/
                     }
                 }
             }

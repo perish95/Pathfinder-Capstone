@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                         //String id  =  email.substring(0 ,email.indexOf("@"));
                         if (task.isSuccessful()) {
                             // 로그인 성공
-
                             mref.addListenerForSingleValueEvent(new ValueEventListener() { //데이터를 한 번만 읽도록 바꾸어줌
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

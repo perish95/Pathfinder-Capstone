@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 public class SignupActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    private DatabaseReference mref = firebaseDatabase.getReference("UserInfo");
 
     // 비밀번호 정규식
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9!@.#$%^&*?_~]{4,16}$");
@@ -43,7 +44,9 @@ public class SignupActivity extends AppCompatActivity {
 
     private String email = "";
     private String password = "";
+    private String toNickName;
     private boolean bool;
+    private boolean NOverlap =true;
 
     @Override
     protected void onCreate(Bundle bundle){
@@ -64,7 +67,7 @@ public class SignupActivity extends AppCompatActivity {
         //final EditText nameText = (EditText) findViewById(R.id.nameText);
         //final EditText nicknameText = (EditText) findViewById(R.id.nicknameText);
         Button submitButton = (Button) findViewById(R.id.submitButton);
-
+        Button overlapButton = (Button) findViewById(R.id.overlapButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +75,9 @@ public class SignupActivity extends AppCompatActivity {
                   || TextUtils.isEmpty(editTextPhoneNumber.getText().toString().trim()) || TextUtils.isEmpty(editTextName.getText().toString().trim())
                   || TextUtils.isEmpty(editTextNickname.getText().toString().trim()))
                     Toast.makeText(SignupActivity.this, "E-mail, PASSWORD , 이름, 전화번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                else if(NOverlap || !(toNickName.equals(editTextNickname.getText().toString()))){
+                    Toast.makeText(SignupActivity.this, "닉네임 중복확인을 해주세요", Toast.LENGTH_SHORT).show();
+                }
                 else {
                     signUp();
                     User temp = new User(editTextPhoneNumber.getText().toString(), editTextEmail.getText().toString(), editTextPassword.getText().toString(),
@@ -80,6 +86,34 @@ public class SignupActivity extends AppCompatActivity {
                         databaseReference.child("/UserInfo/" + temp.get_nickname()).setValue(temp);
                     }
                 }
+            }
+        });
+
+        overlapButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                toNickName = editTextNickname.getText().toString();
+                mref.addListenerForSingleValueEvent(
+                        new ValueEventListener() { //데이터를 한 번만 읽도록 바꾸어줌
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            if (toNickName.equals(snapshot.getValue(User.class).get_nickname())) {
+                                Toast.makeText(SignupActivity.this, "닉네임 생성이 불가능합니다!", Toast.LENGTH_SHORT).show();
+                                NOverlap = true;
+                                break;
+                            }
+                            Toast.makeText(SignupActivity.this, "닉네임 생성이 가능합니다!", Toast.LENGTH_SHORT).show();
+                            NOverlap = false;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        //Overide
+                    }
+                });
+
             }
         });
     }

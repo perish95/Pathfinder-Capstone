@@ -21,12 +21,13 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.LocationButtonView;
 import com.naver.maps.map.widget.ZoomControlView;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000; // 위치 권한 요청 코드
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100; // 위치 권한 요청 코드
     private FusedLocationSource locationSource; // 위치 반환 구현체 (google play service)
 
     @Override
@@ -48,6 +49,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             LocationButtonView locationButtonView = findViewById(R.id.location); // 위치 검색 UI
             locationButtonView.setMap(naverMap);
             locationButtonView.setOnClickListener(v -> naverMap.setLocationTrackingMode(LocationTrackingMode.Follow)); // 재검색 버튼에 리스너 추가
+            LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+            locationOverlay.setVisible(true);
         });
 
         //
@@ -59,8 +62,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull NaverMap naverMap) {
         naverMap.setLocationSource(locationSource); // 구현체 맵에 set
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow); // 맵에 위치 추적 추가
-        naverMap.addOnLocationChangeListener(location ->
-                Toast.makeText(this, location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show()); // 맵에 위치 변경 리스너 추가
+
+        naverMap.addOnOptionChangeListener(() -> {
+            LocationTrackingMode mode = naverMap.getLocationTrackingMode();
+
+            locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
+        });
+//        naverMap.addOnLocationChangeListener(location ->
+//                Toast.makeText(this, location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show()); // 맵에 위치 변경 리스너 추가
 
 //        LocationTrackingMode trackingMode = naverMap.getLocationTrackingMode();
 
@@ -117,4 +126,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 //    public boolean pressedLocationButtion
+
 }

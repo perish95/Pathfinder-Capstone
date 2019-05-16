@@ -24,6 +24,11 @@ android {
             universalApk false
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+    buildToolsVersion = '28.0.3'
 }
 
 dependencies {
@@ -41,6 +46,8 @@ dependencies {
 
     // 네이버 지도 SDK
     implementation 'com.naver.maps:map-sdk:3.3.0'
+    // 사용자 위치 관련 sdk
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

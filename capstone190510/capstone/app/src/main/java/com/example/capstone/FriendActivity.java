@@ -35,7 +35,6 @@ public class FriendActivity extends AppCompatActivity {
 
         Intent recv = getIntent();//SearchFriendActivity에서 데이터를 받는 intent 객체
         Button addButton = (Button)findViewById(R.id.addButton);
-        String[] temp = { "버너스리","장노이만", "박욘베", "킴선동", "안산피앙세", "우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세"};
         ArrayList<String> items = new ArrayList<>(); //친구목록을 출력하기 위한 arraylist
 
         //MainActivity에서 user 객체 값 받는 과정
@@ -46,6 +45,7 @@ public class FriendActivity extends AppCompatActivity {
             Log.d("CHECK","[FriendActivity]catch : " + user.friendsMap);
         }
 
+        //친구리스트 만드는 과정
         Set key = user.friendsMap.keySet();
 
         for(Iterator it = key.iterator();it.hasNext();){
@@ -57,12 +57,8 @@ public class FriendActivity extends AppCompatActivity {
                 items.add((String)user.friendsMap.get(keyName));
         }
 
-        Log.d("CHECK","[FriendActivity]catch : keyName = " + items);
-        //String[] temp = { "버너스리","장노이만", "박욘베", "킴선동", "안산피앙세", "우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세","우산피앙세"};
-        //ArrayList<String> items = new ArrayList<>();
-        //List<String> items = user._friendList;
+        Log.d("CHECK","[FriendActivity]catch : keyName = " + items); //잘 만들어졌는지 확인
 
-        Collections.addAll(items, temp); //test용
         ListAdapter adapter = new ArrayAdapter<String>(this, simple_list_item_1, items);
         final ListView listView = (ListView) findViewById(R.id.friendListView);
         listView.setAdapter(adapter);
@@ -82,9 +78,6 @@ public class FriendActivity extends AppCompatActivity {
             Log.d("확인", "객체확인" + recv);
             Log.d("test", "stinrg" + recv.getStringExtra("deli"));
             String input = recv.getStringExtra("deli");
-            //databaseReference.child(user.get_nickname()).child("_friendList").child("1").setValue("hiFriend!");
-            //databaseReference.child(user.get_nickname()).child("_friendList").setValue(input);
-            //items.add(input); // 지금은 확인하는 용도라 로컬에만 추가해서 2개 이상 업데이트가 안됨.
             ((ArrayAdapter) adapter).notifyDataSetChanged();
         }
 

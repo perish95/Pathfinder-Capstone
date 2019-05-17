@@ -28,6 +28,7 @@ public class User implements Serializable {
         friendsMap = new HashMap<>();
         friendsMap.put(" "," ");
     }
+
     User(){
         //Default Constructor
     }

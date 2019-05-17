@@ -55,11 +55,6 @@ public class SignupActivity extends AppCompatActivity {
         editTextPhoneNumber= findViewById(R.id.numberText);
         editTextNickname = findViewById(R.id.nicknameText);
 
-        //final EditText numberText = (EditText) findViewById(R.id.numberText);
-        //final EditText idText = (EditText) findViewById(R.id.idText);
-        //final EditText pwText = (EditText) findViewById(R.id.pwText);
-        //final EditText nameText = (EditText) findViewById(R.id.nameText);
-        //final EditText nicknameText = (EditText) findViewById(R.id.nicknameText);
         Button submitButton = (Button) findViewById(R.id.submitButton);
 
         submitButton.setOnClickListener(new View.OnClickListener() {

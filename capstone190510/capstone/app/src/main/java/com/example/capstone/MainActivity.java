@@ -1,8 +1,12 @@
 package com.example.capstone;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,13 +25,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference();
     private DatabaseReference mref = firebaseDatabase.getReference("UserInfo");
     private FirebaseAuth firebaseAuth;
-
 
     private EditText email_login;
     private EditText pwd_login;
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Button loginButton = (Button) findViewById(R.id.loginButton);
         final Button signupButton = (Button) findViewById(R.id.signupButton);
+        final Button mapButton = (Button) findViewById(R.id.mapButton);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,11 +62,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
                 startActivity(intent);
             }
         });
@@ -83,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        //String id  =  email.substring(0 ,email.indexOf("@"));
                         if (task.isSuccessful()) {
                             // 로그인 성공
 
@@ -117,5 +127,4 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }

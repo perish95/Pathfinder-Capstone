@@ -16,11 +16,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Pattern;
 
@@ -69,8 +66,8 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(TextUtils.isEmpty(editTextEmail.getText().toString().trim()) || TextUtils.isEmpty(editTextPassword.getText().toString().trim())
-                  || TextUtils.isEmpty(editTextPhoneNumber.getText().toString().trim()) || TextUtils.isEmpty(editTextName.getText().toString().trim())
-                  || TextUtils.isEmpty(editTextNickname.getText().toString().trim()))
+                        || TextUtils.isEmpty(editTextPhoneNumber.getText().toString().trim()) || TextUtils.isEmpty(editTextName.getText().toString().trim())
+                        || TextUtils.isEmpty(editTextNickname.getText().toString().trim()))
                     Toast.makeText(SignupActivity.this, "E-mail, PASSWORD , 이름, 전화번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 else {
                     signUp();
@@ -139,5 +136,4 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }

@@ -103,6 +103,7 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
                         if(submit)
                             Toast.makeText(SearchFriendActivity.this, "해당 아이디를 찾았습니다.", Toast.LENGTH_SHORT).show();
                         Log.d("CHECK","[FriendSearchActivity] catch : submit = " + submit);
+                        //TLqkf
                         break;
                     }
                 }if(!submit)

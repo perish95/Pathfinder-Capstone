@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.naver.maps:map-sdk:3.3.0'
     // 사용자 위치 관련 sdk
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.google.android:flexbox:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

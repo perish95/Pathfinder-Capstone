@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.Manifest;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         load();
         final Button loginButton = (Button) findViewById(R.id.loginButton);
         final Button signupButton = (Button) findViewById(R.id.signupButton);
+        final Button mapButton = (Button) findViewById(R.id.mapButton);
         email_login = (EditText) findViewById(R.id.idText);
         pwd_login = (EditText) findViewById(R.id.pwText);
         autoCheck = (CheckBox) findViewById(R.id.autoLogin);

@@ -60,7 +60,7 @@
         android:layout_marginTop="39dp"
         android:ems="10"
         android:hint="비밀번호"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="@+id/idText"
         app:layout_constraintTop_toBottomOf="@+id/idText" />
 

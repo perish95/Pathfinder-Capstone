@@ -48,7 +48,6 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
         searchButton = (Button) findViewById(R.id.searchButton);
         searchIdText = (EditText)findViewById(R.id.searchIdText);
 
-
         addButton.setOnClickListener(this);
         searchButton.setOnClickListener(this);
     }

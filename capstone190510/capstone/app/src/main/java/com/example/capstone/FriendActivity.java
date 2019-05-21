@@ -44,6 +44,7 @@ public class FriendActivity extends AppCompatActivity {
 
         Intent recv = getIntent();//SearchFriendActivity에서 데이터를 받는 intent 객체
         Button addButton = (Button) findViewById(R.id.addButton);
+        Button settingButton = (Button) findViewById(R.id.settingButton);
         ArrayList<String> items = new ArrayList<>(); //친구목록을 출력하기 위한 arraylist
 
         //MainActivity에서 user 객체 값 받는 과정
@@ -77,6 +78,14 @@ public class FriendActivity extends AppCompatActivity {
                 //Intent intent = new Intent(getApplicationContext() , FriendActivity.class);
                 intent.putExtra("SentUser", user); //FriendActivity에 user값 전달
                 startActivity(intent);
+            }
+        });
+
+        //설정버튼 액션
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogSetting();
             }
         });
 
@@ -144,6 +153,31 @@ public class FriendActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //Click "No"
                 mRef.child("MeetingInfo").child(user.get_nickname()).removeValue();
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alert = requestAlt.create();
+        alert.setTitle("Test");
+        alert.setIcon(R.drawable.ic_launcher_background);
+        alert.show();
+    }
+
+    private void dialogSetting() {
+        AlertDialog.Builder requestAlt = new AlertDialog.Builder(this);
+        requestAlt.setMessage("제작 - PathFinder\n팀장 - 버너스리\n서버 - 안산피앙새\n기획 - 이경석주니어\nGPS - 장노이만").setCancelable(false).setPositiveButton("로그아웃",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Click "yes"
+                        Intent it = new Intent(getApplicationContext(), MainActivity.class);
+                        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(it);
+                    }
+                }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Click "No"
                 dialog.cancel();
             }
         });

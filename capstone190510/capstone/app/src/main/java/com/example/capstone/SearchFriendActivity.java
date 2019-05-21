@@ -66,21 +66,25 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
                 Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
 
                 if(submit){
-                    //intent.putExtra("deli", toSearch);
-                    //user._friendList.add(toSearch);
                     if(friend != null){
                         //friend._friendList.add(user._name);
                         friend.friendsMap.put(user.get_nickname(), user._name);
-                        //databaseReference.child(friend.get_nickname()).child("_friendList").setValue(friend._friendList);
                         databaseReference.child(friend.get_nickname()).child("friendsMap").setValue(friend.friendsMap);
                     }
                     intent.putExtra("SentUser", user);
                     startActivity(intent);
                 }
                 else{
+                    Toast.makeText(SearchFriendActivity.this, "추가할 아이디가 없습니다.", Toast.LENGTH_SHORT).show();
                     intent.putExtra("SentUser", user);
                     startActivity(intent);
                 }
+                break;
+
+            case R.id.settingButton:
+                Intent it = new Intent(getApplicationContext(), FriendActivity.class);
+                it.putExtra("SentUser", user);
+                startActivity(it);
                 break;
         }
     }

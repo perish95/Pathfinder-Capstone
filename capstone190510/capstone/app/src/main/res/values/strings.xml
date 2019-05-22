@@ -13,4 +13,6 @@
     <string name="failed_signup">회원가입 실패</string>
 
     <string name="check_coord">현재 좌표\n(%1$.5f, %2$.5f)</string>
+
+    <string name="map_test_button">맵 테스트</string>
 </resources>

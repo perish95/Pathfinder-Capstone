@@ -15,21 +15,22 @@
  */
 package com.example.capstone;
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
-import android.widget.CheckedTextView;
 import android.widget.Toast;
 
+import com.naver.maps.geometry.Coord;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.util.FusedLocationSource;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
@@ -56,6 +57,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+
     }
 
     @Override
@@ -87,10 +89,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         locationSource = null;
     }
 
+    @SuppressLint("StringFormatMatches")
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
+        double[] coord_Array = {0,0}; //latitude, longitude
+        // 람다식 내에서 변수를 가져오기 위해 배열을 썼지만 Side Effect 이슈 존재하는 코딩이라고 함
+        // 근데 다른 방법은 더 모르겠어서 그냥 씀
+        double longitude;
+
         naverMap.setLocationSource(locationSource);
         LocationTrackingMode mode = naverMap.getLocationTrackingMode(); // LocationTrackingMode는 None / Follow / NoFollow / Face 모드 있음
         locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
+        
+        // 디버그용
+        naverMap.addOnLocationChangeListener((coord) -> {
+            coord_Array[0] = coord.getLatitude(); // 위도 경도 더블형으로 받은거임 알아서 갖다 쓰셈
+            coord_Array[1] = coord.getLongitude();
+            Toast.makeText(this, getString(R.string.check_coord, coord_Array[0], coord_Array[1]), Toast.LENGTH_SHORT).show(); // 맵에 위치 변경 리스너 추가 후 현재 사용자의 위치가 변경되면 좌표 자동 출력
+        });
     }
+
 }

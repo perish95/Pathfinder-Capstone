@@ -1,58 +1,58 @@
 package com.example.capstone;
 
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class NaverData {
-    public result result;
+    public String status;
+    public meta meta;
+    public List<places> places;
     public String errorMessage;
     public String errorCode;
+//
+//    @Override
+//    public String toString() {
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("status: ");
+//        builder.append(status);
+//        builder.append("\n");
+//
+//        return super.toString();
+//    }
 
-    public class result {
-        public int total;
-        public String userquery;
-        public List<items> items;
-
-        public class items {
-            @Override
-            public String toString() {
-                StringBuilder builder = new StringBuilder();
-                builder.append("address : ");
-                builder.append(address);
-                builder.append("\n");
-                builder.append("point : ");
-                builder.append(point.x);
-                builder.append(" ");
-                builder.append(point.y);
-                builder.append("\n");
-                return builder.toString();
-            }
-
-            public String address;
-            public addrdetail addrdetail;
-
-            public class addrdetail {
-                public String country;
-                public String sido;
-                public String sigugun;
-                public String dongmyun;
-                public String rest;
-            }
-
-            public point point;
-
-            public class point {
-                public double x;
-                public double y;
-            }
-        }
+    public class meta{
+        public int totalCount;
+        public int count;
     }
+
+    public class places {
+        public String name;
+        public String road_address;
+        public String jibun_address;
+        public String phone_number;
+        public double distance;
+
+        public point point;
+
+        public class point {
+            public double x;
+            public double y;
+        }
+
+        public String sessionId;
+    }
+
 
     @Override
     public String toString() {
-        if (result == null) {
+        if (places == null) {
             return String.format("errorMessage : %s, errorCode : %s", errorMessage, errorCode);
         } else {
-            return result.items.get(0).toString();
+            Log.d("places name", places.get(2).name);
+            return places.get(0).toString();
         }
     }
+
 }

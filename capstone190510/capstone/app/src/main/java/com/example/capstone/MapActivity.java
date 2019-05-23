@@ -48,7 +48,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private FusedLocationSource locationSource;
 
-    private double[] coord_Array = {0,0}; //latitude, longitude
+    private double[] coord_Array = {0,0}; // latitude, longitude
     // 람다식 내에서 변수를 가져오기 위해 배열을 썼지만 Side Effect 이슈 존재하는 코딩이라고 함
     // 근데 다른 방법은 더 모르겠어서 그냥 씀
 

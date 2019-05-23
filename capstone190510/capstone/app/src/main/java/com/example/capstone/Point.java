@@ -78,6 +78,7 @@ class Point extends AsyncTask<String, Integer, Point> {
 
         Log.d("TEST2", "json => " + json);
 
+
         Gson gson = new Gson();
         NaverData data = new NaverData();
         try {
@@ -85,13 +86,15 @@ class Point extends AsyncTask<String, Integer, Point> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+//
+//        if (data.places != null) {
+//            x = data.places.items.get(0).point.x;
+//            y = data.places.items.get(0).point.y;
+//            havePoint = true;
+//        }
 
-        if (data.result != null) {
-            x = data.result.items.get(0).point.x;
-            y = data.result.items.get(0).point.y;
-            havePoint = true;
-        }
+        Log.d("jsonTest", data.toString());
 
-        return null;
+       return null;
     }
 }

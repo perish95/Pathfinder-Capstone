@@ -52,8 +52,8 @@ class Point extends AsyncTask<String, Integer, Point> {
             con.setRequestMethod("GET");
             con.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
             con.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
-            Log.d("conProperty", String.valueOf(con.getRequestProperties()));
-            Log.d("conExpress", String.valueOf(con));
+//            Log.d("conProperty", String.valueOf(con.getRequestProperties()));
+//            Log.d("conExpress", String.valueOf(con));
             int responseCode = con.getResponseCode();
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출

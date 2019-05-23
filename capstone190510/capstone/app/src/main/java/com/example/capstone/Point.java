@@ -43,8 +43,10 @@ class Point extends AsyncTask<String, Integer, Point> {
         String clientId = "6h70bzzqaf";// 애플리케이션 클라이언트 아이디값";
         String clientSecret = "3PlxCcT6c4kY1Yi9mlAqN0UKDu2K4lVZFfMpAKoH";// 애플리케이션 클라이언트 시크릿값";
         try {
+            String query = "음식";
+            query = URLEncoder.encode(query, "UTF-8");
             addr = URLEncoder.encode(addr, "UTF-8");
-            String apiURL = "https://openapi.naver.com/v1/map/geocode?coordinate=" + addr; // json
+            String apiURL = "https://naveropenapi.apigw.ntruss.com/map-place/v1/search?query=" + query + "&coordinate=" + addr; // json
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
@@ -52,7 +54,6 @@ class Point extends AsyncTask<String, Integer, Point> {
             con.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
             Log.d("conProperty", String.valueOf(con.getRequestProperties()));
             Log.d("conExpress", String.valueOf(con));
-            Log.d("responseError", String.valueOf(con.getResponseCode()));
             int responseCode = con.getResponseCode();
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출

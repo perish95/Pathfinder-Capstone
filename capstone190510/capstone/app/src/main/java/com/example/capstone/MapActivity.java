@@ -126,7 +126,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             requestButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String addr = String.valueOf(coord_Array[0]) + "," + String.valueOf(coord_Array[1]);
+                    String addr = String.valueOf(coord_Array[1]) + "," + String.valueOf(coord_Array[0]);
                     Log.d("testCoord", addr);
                     new Point(addr).execute();
                 /*

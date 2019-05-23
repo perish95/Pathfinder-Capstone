@@ -31,7 +31,7 @@ public class SignupActivity extends AppCompatActivity {
 
     // 비밀번호 정규식
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9!@.#$%^&*?_~]{4,16}$");
-
+    private static final Pattern PhonNum_PATTERN = Pattern.compile("^01(?:0|1|[6-9])(?:\\d{3}|\\d{4})\\d{4}$");
     // 파이어베이스 인증 객체 생성
     private FirebaseAuth firebaseAuth;
 
@@ -45,6 +45,7 @@ public class SignupActivity extends AppCompatActivity {
     private String email = "";
     private String password = "";
     private String toNickName;
+    private String phone ="";
     private boolean bool;
     private boolean NOverlap =true;
 
@@ -116,8 +117,9 @@ public class SignupActivity extends AppCompatActivity {
     public void signUp() {
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
+        phone = editTextPhoneNumber.getText().toString();
         bool = false;
-        if(isValidEmail() && isValidPassword()) {
+        if(isValidEmail() && isValidPassword() && isValidPhone()) {
             createUser(email, password);
             bool = true;
         }
@@ -129,6 +131,7 @@ public class SignupActivity extends AppCompatActivity {
             // 이메일 공백
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(SignupActivity.this, "이메일 형식 불일치", Toast.LENGTH_SHORT).show();
             // 이메일 형식 불일치
             return false;
         } else {
@@ -142,6 +145,7 @@ public class SignupActivity extends AppCompatActivity {
             // 비밀번호 공백
             return false;
         } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
+            Toast.makeText(SignupActivity.this, "비밀번호 형식 불일치(6자리이상)", Toast.LENGTH_SHORT).show();
             // 비밀번호 형식 불일치
             return false;
         } else {
@@ -149,6 +153,18 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isValidPhone(){
+        if (phone.isEmpty()) {
+            // 핸드폰 번호
+            return false;
+        } else if (!PhonNum_PATTERN.matcher(phone).matches()) {
+            Toast.makeText(SignupActivity.this, "휴대폰 형식 불일치", Toast.LENGTH_SHORT).show();
+            // 핸드폰 형식 불일치
+            return false;
+        } else {
+            return true;
+        }
+    }
     // 회원가입
     private void createUser(String email, String password) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)

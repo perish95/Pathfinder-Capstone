@@ -38,7 +38,16 @@
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:text="친구추가"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/settingButton"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="친구추가" />
+            android:text="설정"
+            android:textSize="20sp" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

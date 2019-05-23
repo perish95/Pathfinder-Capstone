@@ -18,22 +18,41 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/searchButton"
-            android:layout_width="108dp"
+            android:id="@+id/cancelButtton"
+            android:layout_width="75dp"
             android:layout_height="47dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="취소"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/addButton"
+            app:layout_constraintHorizontal_bias="0.702"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchIdText"
+            app:layout_constraintVertical_bias="0.639" />
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="112dp"
+            android:layout_height="47dp"
+            android:layout_marginBottom="84dp"
             android:text="검색"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/addButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/searchIdText" />
 
         <Button
             android:id="@+id/addButton"
-            android:layout_width="112dp"
+            android:layout_width="75dp"
             android:layout_height="47dp"
-            android:layout_marginEnd="56dp"
+            android:layout_marginEnd="96dp"
             android:layout_marginBottom="52dp"
             android:text="추가"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -48,7 +67,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/addButton"
             app:layout_constraintEnd_toStartOf="@+id/searchButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.398" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

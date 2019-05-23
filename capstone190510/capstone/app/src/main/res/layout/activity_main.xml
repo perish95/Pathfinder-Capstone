@@ -9,24 +9,27 @@
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="10dp"
         android:text="로그인"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/pwText"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="@+id/pwText"
         app:layout_constraintTop_toBottomOf="@+id/pwText"
         tools:text="로그인" />
 
     <Button
         android:id="@+id/signupButton"
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="회원가입"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/pwText"
-        app:layout_constraintHorizontal_bias="0.464"
+        app:layout_constraintHorizontal_bias="0.456"
         app:layout_constraintStart_toStartOf="@+id/pwText"
         app:layout_constraintTop_toBottomOf="@+id/loginButton"
         tools:text="회원가입" />
@@ -35,7 +38,7 @@
         android:id="@+id/autoLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
+        android:layout_marginEnd="28dp"
         android:text="자동로그인"
         app:layout_constraintBaseline_toBaselineOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,24 +46,25 @@
 
     <EditText
         android:id="@+id/idText"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="249dp"
+        android:layout_marginTop="296dp"
         android:ems="10"
-        android:hint="아이디"
+        android:hint="이메일"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/pwText"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="39dp"
         android:ems="10"
         android:hint="비밀번호"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="@+id/idText"
         app:layout_constraintTop_toBottomOf="@+id/idText" />
 
@@ -68,10 +72,24 @@
         android:id="@+id/mapButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="152dp"
-        android:text="맵 테스트"
-        app:layout_constraintBottom_toTopOf="@+id/idText"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="28dp"
+        android:text="@string/map_test_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="맵 테스트" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/capstone_logo" />
+
 </android.support.constraint.ConstraintLayout>

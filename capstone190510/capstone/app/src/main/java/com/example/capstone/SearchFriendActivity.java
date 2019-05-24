@@ -81,7 +81,7 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
                 }
                 break;
 
-            case R.id.settingButton:
+            case R.id.cancelButtton:
                 Intent it = new Intent(getApplicationContext(), FriendActivity.class);
                 it.putExtra("SentUser", user);
                 startActivity(it);

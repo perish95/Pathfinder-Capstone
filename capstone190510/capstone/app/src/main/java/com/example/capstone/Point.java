@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.overlay.Marker;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-class Point extends AsyncTask<String, Integer, Point> {
+class Point extends AsyncTask<String, Integer, NaverPlaceData> {
     // 위도
     public double x;
     // 경도
@@ -38,7 +40,7 @@ class Point extends AsyncTask<String, Integer, Point> {
     }
 
     @Override
-    protected Point doInBackground(String... strings) {
+    protected NaverPlaceData doInBackground(String... strings) {
         String json = null;
         String clientId = "6h70bzzqaf";// 애플리케이션 클라이언트 아이디값";
         String clientSecret = "3PlxCcT6c4kY1Yi9mlAqN0UKDu2K4lVZFfMpAKoH";// 애플리케이션 클라이언트 시크릿값";
@@ -73,16 +75,16 @@ class Point extends AsyncTask<String, Integer, Point> {
         }
 
         if (json == null) {
-            return this;
+            return null;
         }
 
         Log.d("TEST2", "json => " + json);
 
 
         Gson gson = new Gson();
-        NaverData data = new NaverData();
+        NaverPlaceData data = new NaverPlaceData();
         try {
-            data = gson.fromJson(json, NaverData.class);
+            data = gson.fromJson(json, NaverPlaceData.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,6 +97,6 @@ class Point extends AsyncTask<String, Integer, Point> {
 
         Log.d("jsonTest", data.toString());
 
-       return null;
+       return data;
     }
 }

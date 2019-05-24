@@ -28,11 +28,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.naver.maps.geometry.Coord;
+import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
 import org.json.JSONObject;
@@ -42,13 +44,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.concurrent.ExecutionException;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
     private FusedLocationSource locationSource;
 
-    private double[] coord_Array = {0,0}; // latitude, longitude
+    private double[] coord_Array = {0, 0}; // latitude, longitude
     // 람다식 내에서 변수를 가져오기 위해 배열을 썼지만 Side Effect 이슈 존재하는 코딩이라고 함
     // 근데 다른 방법은 더 모르겠어서 그냥 씀
 
@@ -64,7 +67,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //            actionBar.setDisplayShowHomeEnabled(true);
 //        } // 상단 뒤로가기 버튼 있는 막대
 
-        MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance(new NaverMapOptions().locationButtonEnabled(true));
             getSupportFragmentManager().beginTransaction().add(R.id.map, mapFragment).commit();
@@ -78,16 +81,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        switch (requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE : {
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Toast.makeText(this,"위치 권한 승인이 허가되어 있습니다.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "위치 권한 승인이 허가되어 있습니다.", Toast.LENGTH_LONG).show();
 
                 } else {
-                    Toast.makeText(this,"위치 권한을 아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "위치 권한을 아직 승인받지 않았습니다.", Toast.LENGTH_LONG).show();
                 }
                 return;
             }
@@ -128,12 +131,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 public void onClick(View v) {
                     String addr = String.valueOf(coord_Array[1]) + "," + String.valueOf(coord_Array[0]);
                     Log.d("testCoord", addr);
-                    new Point(addr).execute();
-                /*
-                curl "https://naveropenapi.apigw.ntruss.com/map-place/v1/search?query={장소_명칭}&coordinate={검색_중심_좌표}" \
-                -H "X-NCP-APIGW-API-KEY-ID: {애플리케이션 등록 시 발급받은 client id값}" \
-                -H "X-NCP-APIGW-API-KEY: {애플리케이션 등록 시 발급받은 client secret값}" -v
-                */
+
+                    try {
+                        NaverPlaceData placeData = new Point(addr).execute().get();
+                        // 네트워크 관련 처리는 메인 스레드에서 수행 금지
+                        // 따라서 비동기 태스크인 AsyncTask에서 백그라운드로 작업 수행
+                        // execute로 실행하고 get으로 doInBackground의 return 값 받아옴
+
+                        Marker marker = new Marker();
+                        marker.setPosition(new LatLng(placeData.places.get(1).y, placeData.places.get(1).x ));
+                        marker.setMap(naverMap);
+
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         });

@@ -16,6 +16,7 @@
 package com.example.capstone;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.naver.maps.geometry.Coord;
 import com.naver.maps.geometry.LatLng;
@@ -50,6 +53,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
     private FusedLocationSource locationSource;
+    private User user;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference("UserInfo");
 
     private double[] coord_Array = {0, 0}; // latitude, longitude
     // 람다식 내에서 변수를 가져오기 위해 배열을 썼지만 Side Effect 이슈 존재하는 코딩이라고 함
@@ -60,6 +66,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_map);
+
+        Intent recv = getIntent();
+
+        //MainActivity에서 user 객체 값 받는 과정
+        if ((User) recv.getSerializableExtra("SentUser") != null) {
+            user = (User) recv.getSerializableExtra("SentUser");
+            Log.d("CHECK", "[MapActivity]catch : " + user.get_nickname());
+        }
 
 //        ActionBar actionBar = getSupportActionBar();
 //        if (actionBar != null) {
@@ -118,6 +132,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         naverMap.addOnLocationChangeListener((coord) -> {
             coord_Array[0] = coord.getLatitude(); // 위도 경도 더블형으로 받은거임 알아서 갖다 쓰셈
             coord_Array[1] = coord.getLongitude();
+            user.latitude = coord.getLatitude();
+            user.longitude = coord.getLongitude();
+            databaseReference.child(user.get_nickname()).child("latitude").setValue(user.latitude);
+            databaseReference.child(user.get_nickname()).child("longitude").setValue(user.longitude);
 
             // 디버그용
             Toast.makeText(this, getString(R.string.check_coord, coord_Array[0], coord_Array[1]), Toast.LENGTH_SHORT).show(); // 맵에 위치 변경 리스너 추가 후 현재 사용자의 위치가 변경되면 좌표 자동 출력

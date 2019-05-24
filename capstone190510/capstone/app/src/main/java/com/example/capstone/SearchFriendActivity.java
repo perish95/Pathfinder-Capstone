@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class SearchFriendActivity extends Activity implements View.OnClickListener {
-    private Button addButton, searchButton;
+    private Button addButton, searchButton, cancelButton;
     private EditText searchIdText;
     private boolean submit = false; // 값을 찾았는지 확인해주는 변수
     private User user;
@@ -46,11 +46,13 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
     private void setContent(){
         addButton = (Button) findViewById(R.id.addButton);
         searchButton = (Button) findViewById(R.id.searchButton);
+        cancelButton = (Button) findViewById(R.id.cancelButtton);
         searchIdText = (EditText)findViewById(R.id.searchIdText);
 
 
         addButton.setOnClickListener(this);
         searchButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);
     }
 
     @Override
@@ -81,7 +83,7 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
                 }
                 break;
 
-            case R.id.settingButton:
+            case R.id.cancelButtton:
                 Intent it = new Intent(getApplicationContext(), FriendActivity.class);
                 it.putExtra("SentUser", user);
                 startActivity(it);
@@ -121,8 +123,6 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
         });
         Log.d("CHECK","[FriendSearchActivity] catch : submit = " + submit);
         submit = false;
-
-
     }
 
 }

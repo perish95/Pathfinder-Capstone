@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="75"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/FriendNameText"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_margin="15dp"
+            android:text="dd"
+            android:textSize="28sp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/AddFriendButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/ok_button" />
+
+    <Button
+        android:id="@+id/FriendCancelButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/cancelbutton" />
+
+</LinearLayout>

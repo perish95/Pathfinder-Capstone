@@ -45,6 +45,7 @@ public class FriendActivity extends AppCompatActivity {
         Intent recv = getIntent();//SearchFriendActivity에서 데이터를 받는 intent 객체
         Button addButton = (Button) findViewById(R.id.addButton);
         Button settingButton = (Button) findViewById(R.id.settingButton);
+        Button waitButton = (Button) findViewById(R.id.waitListButton);
         ArrayList<String> items = new ArrayList<>(); //친구목록을 출력하기 위한 arraylist
 
         //MainActivity에서 user 객체 값 받는 과정
@@ -88,6 +89,17 @@ public class FriendActivity extends AppCompatActivity {
                 dialogSetting();
             }
         });
+
+        waitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(getApplicationContext(), RequestFriendActivity.class);
+                it.putExtra("SentUser", user);
+                startActivity(it);
+            }
+        });
+
+
 
         updatePromise(); // 약속신청을 받았을 때 구현
 

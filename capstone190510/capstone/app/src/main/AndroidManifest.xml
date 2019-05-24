@@ -3,7 +3,7 @@
     package="com.example.capstone">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".RequestFriendActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,25 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MapActivity">
-
-        </activity>
-        <activity android:name=".SignupActivity">
-
-        </activity>
-        <activity android:name=".FriendActivity">
-
-        </activity>
-
+        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".FriendActivity"></activity>
         <activity
             android:name=".SearchFriendActivity"
-            android:theme="@android:style/Theme.Dialog">
-        </activity>
+            android:theme="@android:style/Theme.Dialog"></activity>
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="6h70bzzqaf" />
-
     </application>
 
 </manifest>

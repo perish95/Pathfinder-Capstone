@@ -25,13 +25,10 @@ public class User implements Serializable {
         _password = password;
         _name = name;
         _nickname = nickname;
-        //_friendList = new ArrayList<>();
-        //_friendList.add(""); // friendlist를 서버에 만들기 위해 빈값을 넣어줌
         friendsMap = new HashMap<>();
         friendsMap.put(" "," ");
         latitude = 0;
         longitude = 0;
-
     }
 
     User(){

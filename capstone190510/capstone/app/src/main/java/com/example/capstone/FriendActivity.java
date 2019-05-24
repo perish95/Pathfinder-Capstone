@@ -124,13 +124,16 @@ public class FriendActivity extends AppCompatActivity {
     private void dialogRequest(String partner) {
         AlertDialog.Builder requestAlt = new AlertDialog.Builder(this);
         //int currentPos = getPosition(); //currentPos는 현재 자신의 위치 뒤에 들어갈 예정
-        requestAlt.setMessage("현재 자신의 위치\n" + partner + "님에게 약속을 신청하시겠습니까?").setCancelable(false).setPositiveButton("예",
+        requestAlt.setMessage(partner + "님에게 약속을 신청하시겠습니까?").setCancelable(false).setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Click "yes"
                         requestPromise(partner); //서버로 약속 요청을 하는 메소드
-                        //Intent sent = new Intent(getApplicationContext(), 클래스명);
+                        Intent sent = new Intent(getApplicationContext(), MapActivity.class);
+                        sent.putExtra("SentUser", user);
+                        startActivity(sent);
+
                     }
                 }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
             @Override
@@ -232,11 +235,6 @@ public class FriendActivity extends AppCompatActivity {
             }
         });
     }
-
-    void getPosition() {
-        //메소드 타입은 위치 정보의 타입에 따라 갈림
-    }
-
     /*
     @Override
     public void onBackPressed(){

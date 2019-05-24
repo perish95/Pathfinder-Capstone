@@ -12,6 +12,7 @@ public class User implements Serializable {
     public HashMap<String, String> friendsMap;
     public double latitude; //위도
     public double longitude; //경도
+    public boolean waitAccept;
 
     private String _id;
     private String _password;
@@ -29,6 +30,7 @@ public class User implements Serializable {
         friendsMap.put(" "," ");
         latitude = 0;
         longitude = 0;
+        waitAccept = false;
     }
 
     User(){

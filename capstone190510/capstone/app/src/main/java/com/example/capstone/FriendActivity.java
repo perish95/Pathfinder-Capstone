@@ -34,7 +34,7 @@ public class FriendActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference("UserInfo");
     private DatabaseReference mRef = firebaseDatabase.getReference();
-    private String requstingFrined;
+
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -130,9 +130,7 @@ public class FriendActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //Click "yes"
                         requestPromise(partner); //서버로 약속 요청을 하는 메소드
-                        Intent sent = new Intent(getApplicationContext(), MapActivity.class);
-                        sent.putExtra("SentUser", user);
-                        startActivity(sent);
+
 
                     }
                 }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
@@ -155,13 +153,17 @@ public class FriendActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void dialogReceive(String partner) {
+    private void dialogReceive(String partner, String id) {
         AlertDialog.Builder requestAlt = new AlertDialog.Builder(this);
         requestAlt.setMessage(partner + "님이 약속을 신청하였습니다. 수락하시겠습니까?").setCancelable(false).setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Click "yes"
+                        databaseReference.child(id).child("waitAccept").setValue(true);
+                        Intent goMap = new Intent(getApplicationContext(), MapActivity.class);
+                        goMap.putExtra("SentUser", user);
+                        startActivity(goMap);
                     }
                 }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
             @Override
@@ -218,21 +220,46 @@ public class FriendActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String partner = null;
+                String partnerID = null;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     if (snapshot.getKey().equals(user.get_nickname()))
                         for (String key : user.friendsMap.keySet()) {
                             if(key.equals(snapshot.getValue().toString())) {
                                 partner = user.friendsMap.get(key);
-                                dialogReceive(partner);
+                                partnerID = key;
+                                dialogReceive(partner, partnerID);
                             }
                         }
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
 
+        //상대가 요청을 받았는지 확인
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("Check","LKS : " + dataSnapshot.getValue(User.class).get_nickname());
+                if(dataSnapshot.getValue(User.class).waitAccept){
+                    Intent sent = new Intent(getApplicationContext(), MapActivity.class);
+                    sent.putExtra("SentUser", user);
+                    startActivity(sent);
+                }
             }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
     /*

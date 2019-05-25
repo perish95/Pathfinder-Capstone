@@ -31,10 +31,10 @@ import static android.R.layout.simple_list_item_1;
 
 public class FriendActivity extends AppCompatActivity {
     private User user;
+    private String friendKey;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference("UserInfo");
     private DatabaseReference mRef = firebaseDatabase.getReference();
-
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -55,7 +55,7 @@ public class FriendActivity extends AppCompatActivity {
             Log.d("CHECK", "[FriendActivity]catch : " + user.friendsMap);
         }
 
-        //친구리스트 만드는 과정
+        // 친구리스트 만드는 과정 Start
         Set key = user.friendsMap.keySet();
 
         for (Iterator it = key.iterator(); it.hasNext(); ) {
@@ -68,7 +68,7 @@ public class FriendActivity extends AppCompatActivity {
 
         Log.d("CHECK", "[FriendActivity]catch : keyName = " + items); //잘 만들어졌는지 확인
 
-        ListAdapter adapter = new ArrayAdapter<String>(this, simple_list_item_1, items);
+        ListAdapter adapter = new ArrayAdapter<String>(this, simple_list_item_1, items); //Listview에 적용
         final ListView listView = (ListView) findViewById(R.id.friendListView);
         listView.setAdapter(adapter);
 
@@ -104,12 +104,12 @@ public class FriendActivity extends AppCompatActivity {
         updatePromise(); // 약속신청을 받았을 때 구현
 
 
-        if (recv.getStringExtra("deli") != null) {
+        /*if (recv.getStringExtra("deli") != null) {
             Log.d("확인", "객체확인" + recv);
             Log.d("test", "stinrg" + recv.getStringExtra("deli"));
             String input = recv.getStringExtra("deli");
             ((ArrayAdapter) adapter).notifyDataSetChanged();
-        }
+        }*/
 
         //친구에게 약속신청을 보내는 버튼 액션
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,8 +130,6 @@ public class FriendActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //Click "yes"
                         requestPromise(partner); //서버로 약속 요청을 하는 메소드
-
-
                     }
                 }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
             @Override
@@ -162,6 +160,7 @@ public class FriendActivity extends AppCompatActivity {
                         //Click "yes"
                         databaseReference.child(id).child("waitAccept").setValue(true);
                         Intent goMap = new Intent(getApplicationContext(), MapActivity.class);
+                        goMap.putExtra("FriendID", id);
                         goMap.putExtra("SentUser", user);
                         startActivity(goMap);
                     }
@@ -210,6 +209,7 @@ public class FriendActivity extends AppCompatActivity {
         for (String key : user.friendsMap.keySet()) {
             if (user.friendsMap.get(key).equals(target)) {
                 map.put(key, user.get_nickname()); //<요청받는 사람, 요청하는 사람>
+                friendKey = key;
                 mRef.child("/MeetingInfo/").setValue(map);
             }
         }
@@ -245,20 +245,17 @@ public class FriendActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.d("Check","LKS : " + dataSnapshot.getValue(User.class).get_nickname());
                 if(dataSnapshot.getValue(User.class).waitAccept){
                     Intent sent = new Intent(getApplicationContext(), MapActivity.class);
+                    sent.putExtra("FriendID", friendKey);
                     sent.putExtra("SentUser", user);
                     startActivity(sent);
                 }
             }
-
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });

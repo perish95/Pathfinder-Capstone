@@ -18,19 +18,20 @@ package com.example.capstone;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
-import com.naver.maps.geometry.Coord;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
@@ -40,20 +41,20 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.concurrent.ExecutionException;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
     private FusedLocationSource locationSource;
+
     private User user;
+    private String friendKey;
+    private double partnerLati; //상대방의 좌표
+    private double partnerLongi; //상대방의 좌표
+    private boolean knowYourPos;
+    private boolean knowMyPos;
+
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference("UserInfo");
 
@@ -69,11 +70,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Intent recv = getIntent();
 
-        //MainActivity에서 user 객체 값 받는 과정
         if ((User) recv.getSerializableExtra("SentUser") != null) {
             user = (User) recv.getSerializableExtra("SentUser");
             Log.d("CHECK", "[MapActivity]catch : " + user.get_nickname());
         }
+
+        if(recv.getStringExtra("FriendID") != null){
+            friendKey = recv.getStringExtra("FriendID");
+            Log.d("CHECK", "[MapActivity]catch, friendkey : " + friendKey);
+        }
+
+        updatePosition(); // partnerLongi, partnerLati에 좌표를 넣어주는 메소드
 
 //        ActionBar actionBar = getSupportActionBar();
 //        if (actionBar != null) {
@@ -136,6 +143,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             user.longitude = coord.getLongitude();
             databaseReference.child(user.get_nickname()).child("latitude").setValue(user.latitude);
             databaseReference.child(user.get_nickname()).child("longitude").setValue(user.longitude);
+            knowMyPos = true;
+            calcPosition();
 
             // 디버그용
             Toast.makeText(this, getString(R.string.check_coord, coord_Array[0], coord_Array[1]), Toast.LENGTH_SHORT).show(); // 맵에 위치 변경 리스너 추가 후 현재 사용자의 위치가 변경되면 좌표 자동 출력
@@ -168,8 +177,37 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             });
         });
+    }
 
+    void updatePosition(){ //상대의 위치정보를 얻어오기 위한 메소드
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getValue(User.class).get_nickname().equals(friendKey)){
+                    partnerLati = dataSnapshot.getValue(User.class).latitude;
+                    partnerLongi = dataSnapshot.getValue(User.class).longitude;
+                    Log.d("check","enter for " + partnerLati);
+                    knowYourPos = true;
+                    calcPosition();
+                }
+            }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
 
+    void calcPosition(){
+        if(knowMyPos && knowYourPos) {
+            Log.d("Fuck", "checkpos " + user.latitude + " " + user.longitude + " " + partnerLati + " " + partnerLongi);
+            center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
+            Log.d("Fuck"," checkpos " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left + " " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left);
+        }
     }
 
     /*
@@ -204,7 +242,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     private Pair<Double, Double> center_of_two_point(double lat1, double lon1, double lat2, double lon2) {//두 경위도 좌표의 중간 지점의 경위도 좌표
         double theta = Math.toRadians(lon2 - lon1);
-        double x = Math.cos(Math.toRadians(lat1)) * Math.sin(theta);
+        double x = Math.cos(Math.toRadians(lat1)) * Math.cos(theta);
         double y = Math.cos(lat2) * Math.sin(theta);
         double resLat = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + x) * (Math.cos(lat1) + x) + y * y));
         double resLon = lon1 + Math.atan2(y, Math.cos(lat1) + x);
@@ -212,6 +250,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         resLon = Math.toDegrees(resLon);
         Log.d("test Latitude",String.valueOf(resLat));
         Log.d("test Longitute",String.valueOf(resLon));
+        knowYourPos = false;
+        knowMyPos = false;
         return new Pair<Double,Double>(resLat, resLon);//중간지점 경위도 좌표 반환
     }
 }

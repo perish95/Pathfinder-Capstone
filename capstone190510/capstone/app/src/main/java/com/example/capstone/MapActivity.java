@@ -188,3 +188,43 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     */
 }
+    private double distance(double lat1, double lon1, double lat2, double lon2) {//두 경위도 좌표 사이 거리
+        double eps = 1e-9;//실수 오차 잡아줄 엡실론(epsilon)
+        if ((lat1 - eps < lat2) && (lat1 < lat2 + eps) && (lon1 - eps < lon2) && (lon1 < lon2 + eps)) {//경도 1과 경도 2, 위도1과 위도2의 차이가 eps보다 작다면 같다고 판단
+            return 0;
+        }
+        double theta = lon1 - lon2;
+        double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2))
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+        dist = Math.acos(dist);
+        dist = Math.toDegrees(dist);
+        dist = dist * 60 * 1.1515 * 1.609344;
+        Log.d("test distance",String.valueOf(dist));
+        return (dist);
+    }
+    private Pair<Double, Double> center_of_two_point(double lat1, double lon1, double lat2, double lon2) {//두 경위도 좌표의 중간 지점의 경위도 좌표
+        double theta = Math.toRadians(lon2 - lon1);
+        double x = Math.cos(Math.toRadians(lat1)) * Math.sin(theta);
+        double y = Math.cos(lat2) * Math.sin(theta);
+        double resLat = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + x) * (Math.cos(lat1) + x) + y * y));
+        double resLon = lon1 + Math.atan2(y, Math.cos(lat1) + x);
+        resLat = Math.toDegrees(resLat);
+        resLon = Math.toDegrees(resLon);
+        Log.d("test Latitude",String.valueOf(resLat));
+        Log.d("test Longitute",String.valueOf(resLon));
+        return new Pair<Double,Double>(resLat, resLon);//중간지점 경위도 좌표 반환
+    }
+}
+class Pair<L, R> {
+    final L left;
+    final R right;
+
+    public Pair(L left, R right) {
+        this.left = left;
+        this.right = right;
+    }
+
+    static <L, R> Pair<L, R> of(L left, R right) {
+        return new Pair<L, R>(left, right);
+    }
+}

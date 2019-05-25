@@ -49,6 +49,8 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
             Log.d("CHECK","[RequestFriendActivity]catch : " + user);
         }
 
+        renew();
+        /*
         for(int i = 1; i< user.friendRequest.size() ; i++){
             //temp.add(user.friendRequest.get(i));
             ItemData oItem = new ItemData();
@@ -56,10 +58,7 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
             oItem.onClickListener = this;
             temp.add(oItem);
         }
-
-        requestList = (ListView) findViewById(R.id.RequestList);
-        adapter = new ListViewAdapter(temp);
-        requestList.setAdapter(adapter);
+        */
     }
 
     public void CheckFriends(String Friendsname, int tagCount ,String position){
@@ -115,7 +114,36 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
         // 부모의 View를 가져온다. 즉, 아이템 View임.
 
     }
+    public void renew(){
+        mref.addListenerForSingleValueEvent(new ValueEventListener() { //데이터를 한 번만 읽도록 바꾸어줌
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (user.get_nickname().equals(snapshot.getValue(User.class).get_nickname())) {
+                        user = (User)snapshot.getValue(User.class);
+                        setList();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //Overide
+            }
+        });
+    }
 
+    public void setList(){
+        for(int i = 1; i< user.friendRequest.size() ; i++){
+            //temp.add(user.friendRequest.get(i));
+            ItemData oItem = new ItemData();
+            oItem.strTitle = user.friendRequest.get(i);
+            oItem.onClickListener = this;
+            temp.add(oItem);
+            requestList = (ListView) findViewById(R.id.RequestList);
+            adapter = new ListViewAdapter(temp);
+            requestList.setAdapter(adapter);
+        }
+    }
     public void AddFriends(){
         friend.friendsMap.put(user.get_nickname(), user._name);
         user.friendsMap.put(friend.get_nickname(),friend._name);
@@ -130,11 +158,11 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
 
         Log.d("Ddd","ddd ===" + index);
         databaseReference.child(user.get_nickname()).child("friendRequest").setValue(user.friendRequest);
-
         if(temp.size()>0) {
             adapter.notifyDataSetChanged();
         }
         else adapter.notifyDataSetInvalidated();
         requestList.setAdapter(adapter);
+
     }
 }

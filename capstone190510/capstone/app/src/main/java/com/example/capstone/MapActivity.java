@@ -187,7 +187,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
     */
-}
+
     private double distance(double lat1, double lon1, double lat2, double lon2) {//두 경위도 좌표 사이 거리
         double eps = 1e-9;//실수 오차 잡아줄 엡실론(epsilon)
         if ((lat1 - eps < lat2) && (lat1 < lat2 + eps) && (lon1 - eps < lon2) && (lon1 < lon2 + eps)) {//경도 1과 경도 2, 위도1과 위도2의 차이가 eps보다 작다면 같다고 판단

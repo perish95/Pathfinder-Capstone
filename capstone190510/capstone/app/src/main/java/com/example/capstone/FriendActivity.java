@@ -216,6 +216,7 @@ public class FriendActivity extends AppCompatActivity {
     }
 
     private void updatePromise() {
+        //나에게 요청이 있는지 확인
         mRef.child("MeetingInfo").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

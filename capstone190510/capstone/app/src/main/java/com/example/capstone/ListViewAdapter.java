@@ -20,11 +20,8 @@ import java.util.ArrayList;
 
 public class ListViewAdapter extends BaseAdapter {
     LayoutInflater infalter = null;
-    private ArrayList<String> waitList = null;
     private int listCount = 0;
-    public View.OnClickListener onClickListener;
     private ArrayList<ItemData> m_oData = null;
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     // ListViewBtnAdapter 생성자. 마지막에 ListBtnClickListener 추가.
     /*
     public ListViewAdapter(ArrayList<String> temp){

@@ -142,35 +142,4 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
         submit = false;
     }
 
-    void addFriends(String target){
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(target.equals(user.get_nickname())){
-                        Toast.makeText(SearchFriendActivity.this, "자신의 아이디는 추가할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                    if (target.equals(snapshot.getValue(User.class).get_nickname())) {
-                        friend = (User)snapshot.getValue(User.class);
-                        //user._friendList.add(snapshot.getValue(User.class)._name);
-                        //user.friendsMap.put(friend.get_nickname(), friend._name);
-                        submit = true;
-                        if(submit)
-                            Toast.makeText(SearchFriendActivity.this, "해당 아이디를 찾았습니다.", Toast.LENGTH_SHORT).show();
-                        Log.d("CHECK","[FriendSearchActivity] catch : submit = " + submit);
-                        //TLqkf
-                        break;
-                    }
-                }if(!submit)
-                    Toast.makeText(SearchFriendActivity.this, "해당 아이디를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.v("NOTICE","Don't search data");
-            }
-        });
-    }
-
 }

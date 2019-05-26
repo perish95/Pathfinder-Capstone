@@ -158,11 +158,7 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
 
         Log.d("Ddd","ddd ===" + index);
         databaseReference.child(user.get_nickname()).child("friendRequest").setValue(user.friendRequest);
-        if(temp.size()>0) {
-            adapter.notifyDataSetChanged();
-        }
-        else adapter.notifyDataSetInvalidated();
-        requestList.setAdapter(adapter);
-
+        //adapter.notifyDataSetChanged();
+        renew();
     }
 }

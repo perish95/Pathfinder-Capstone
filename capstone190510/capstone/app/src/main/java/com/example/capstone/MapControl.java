@@ -31,7 +31,6 @@ public class MapControl {
         this.mapActivity = mapActivity;
         this.addr = addr;
         this.naverMap = naverMap;
-        Log.d("testCoord", addr);
 
         try {
             placeData = new Point(addr).execute().get();
@@ -129,7 +128,6 @@ public class MapControl {
                 return (CharSequence) markerInfo.content;
             }
         });
-        Log.d("markerInfo", markerInfo.content);
         infoWindow.open(marker);
 
         markerInfo.setInfoWindow(infoWindow);
@@ -178,8 +176,6 @@ class MarkerInfo {
     }
 
     public void markerAdapterChange(){
-        Log.d("infoWindow", infoWindow.toString());
-        Log.d("mapActivity", mapActivity.toString());
         infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(mapActivity) {
             @NonNull
             @Override

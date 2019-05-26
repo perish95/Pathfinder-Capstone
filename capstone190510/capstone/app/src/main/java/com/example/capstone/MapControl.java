@@ -92,13 +92,13 @@ public class MapControl {
                         case OPEN:
                             markerInfo.setContent();
                             markerInfo.seeDetail();
-                            //markerInfo.markerAdapterChange();
+                            markerInfo.markerAdapterChange();
                             markerInfo.setOpenState(State.DETAIL);
                             break;
                         case DETAIL:
                             markerInfo.infoWindow.close();
                             markerInfo.seeBasic();
-                          //  markerInfo.markerAdapterChange();
+                            markerInfo.markerAdapterChange();
                             markerInfo.setOpenState(State.CLOSE);
                             break;
                         case CLOSE:
@@ -174,10 +174,12 @@ class MarkerInfo {
         content = name;
     }
     public void setMapActivity(MapActivity mapActivity) {
-        this.mapActivity = this.mapActivity;
+        this.mapActivity = mapActivity;
     }
 
     public void markerAdapterChange(){
+        Log.d("infoWindow", infoWindow.toString());
+        Log.d("mapActivity", mapActivity.toString());
         infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(mapActivity) {
             @NonNull
             @Override

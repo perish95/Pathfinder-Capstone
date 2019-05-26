@@ -46,16 +46,17 @@ class Point extends AsyncTask<String, Integer, NaverPlaceData> {
         String clientSecret = "3PlxCcT6c4kY1Yi9mlAqN0UKDu2K4lVZFfMpAKoH";// 애플리케이션 클라이언트 시크릿값";
         try {
             String query = "음식";
+
             query = URLEncoder.encode(query, "UTF-8");
             addr = URLEncoder.encode(addr, "UTF-8");
             String apiURL = "https://naveropenapi.apigw.ntruss.com/map-place/v1/search?query=" + query + "&coordinate=" + addr; // json
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
             con.setRequestMethod("GET");
             con.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
             con.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
-//            Log.d("conProperty", String.valueOf(con.getRequestProperties()));
-//            Log.d("conExpress", String.valueOf(con));
+
             int responseCode = con.getResponseCode();
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출
@@ -88,12 +89,6 @@ class Point extends AsyncTask<String, Integer, NaverPlaceData> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//
-//        if (data.places != null) {
-//            x = data.places.items.get(0).point.x;
-//            y = data.places.items.get(0).point.y;
-//            havePoint = true;
-//        }
 
         Log.d("jsonTest", data.toString());
 

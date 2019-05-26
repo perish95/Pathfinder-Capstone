@@ -32,18 +32,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
-import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
-import java.util.concurrent.ExecutionException;
-
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private MapActivity mapActivity = this;
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
     private FusedLocationSource locationSource;
@@ -139,10 +137,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         naverMap.addOnLocationChangeListener((coord) -> {
             coord_Array[0] = coord.getLatitude(); // 위도 경도 더블형으로 받은거임 알아서 갖다 쓰셈
             coord_Array[1] = coord.getLongitude();
-            user.latitude = coord.getLatitude();
-            user.longitude = coord.getLongitude();
-            databaseReference.child(user.get_nickname()).child("latitude").setValue(user.latitude);
-            databaseReference.child(user.get_nickname()).child("longitude").setValue(user.longitude);
+//            user.latitude = coord.getLatitude();
+//            user.longitude = coord.getLongitude();
+//            databaseReference.child(user.get_nickname()).child("latitude").setValue(user.latitude);
+//            databaseReference.child(user.get_nickname()).child("longitude").setValue(user.longitude);
             knowMyPos = true;
             calcPosition();
 
@@ -156,24 +154,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             requestButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String addr = String.valueOf(coord_Array[1]) + "," + String.valueOf(coord_Array[0]);
-                    Log.d("testCoord", addr);
-
-                    try {
-                        NaverPlaceData placeData = new Point(addr).execute().get();
-                        // 네트워크 관련 처리는 메인 스레드에서 수행 금지
-                        // 따라서 비동기 태스크인 AsyncTask에서 백그라운드로 작업 수행
-                        // execute로 실행하고 get으로 doInBackground의 return 값 받아옴
-
-                        Marker marker = new Marker();
-                        marker.setPosition(new LatLng(placeData.places.get(1).y, placeData.places.get(1).x ));
-                        marker.setMap(naverMap);
-
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    MapControl mapControl = new MapControl(mapActivity, String.valueOf(coord_Array[1]) + "," + String.valueOf(coord_Array[0]), naverMap);
+                    mapControl.run();
                 }
             });
         });
@@ -210,22 +192,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    /*
-    private void receiveObject(JSONObject data){
-        recyclerView.setVisibility(View.GONE);
-        objectResultLo.setVisibility(View.VISIBLE);
-        try{
-            mReceiveTv.setText(data.toString());
-            mReceiveNationTv.setText("nation : "+data.getString("nation"));
-            mReceiveNameTv.setText("name : "+data.getString("nation"));
-            mReceiveAddressTv.setText("address : "+data.getString("address"));
-            mReceiveAgeTv.setText("age : "+data.getString("age"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    */
-
     private double distance(double lat1, double lon1, double lat2, double lon2) {//두 경위도 좌표 사이 거리
         double eps = 1e-9;//실수 오차 잡아줄 엡실론(epsilon)
         if ((lat1 - eps < lat2) && (lat1 < lat2 + eps) && (lon1 - eps < lon2) && (lon1 < lon2 + eps)) {//경도 1과 경도 2, 위도1과 위도2의 차이가 eps보다 작다면 같다고 판단
@@ -253,18 +219,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         knowYourPos = false;
         knowMyPos = false;
         return new Pair<Double,Double>(resLat, resLon);//중간지점 경위도 좌표 반환
-    }
-}
-class Pair<L, R> {
-    final L left;
-    final R right;
-
-    public Pair(L left, R right) {
-        this.left = left;
-        this.right = right;
-    }
-
-    static <L, R> Pair<L, R> of(L left, R right) {
-        return new Pair<L, R>(left, right);
     }
 }

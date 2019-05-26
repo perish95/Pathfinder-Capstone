@@ -15,4 +15,6 @@
     <string name="check_coord">현재 좌표\n(%1$.5f, %2$.5f)</string>
 
     <string name="map_test_button">맵 테스트</string>
+    <string name="format_info_on_marker" />
+    <string name="format_info_on_map" />
 </resources>

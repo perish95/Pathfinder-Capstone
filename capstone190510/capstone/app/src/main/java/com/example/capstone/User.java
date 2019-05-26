@@ -10,6 +10,7 @@ public class User implements Serializable {
     public String _name;
     //public List<String> _friendList; //새로 추가됬음 190507
     public HashMap<String, String> friendsMap;
+    public ArrayList<String> friendRequest;
     public double latitude; //위도
     public double longitude; //경도
     public boolean waitAccept;
@@ -28,6 +29,8 @@ public class User implements Serializable {
         _nickname = nickname;
         friendsMap = new HashMap<>();
         friendsMap.put(" "," ");
+        friendRequest = new ArrayList<String>();
+        friendRequest.add(" ");
         latitude = 0;
         longitude = 0;
         waitAccept = false;

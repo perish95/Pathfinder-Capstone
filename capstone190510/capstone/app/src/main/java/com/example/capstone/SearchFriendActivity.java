@@ -66,15 +66,32 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
 
             case R.id.addButton: //친구추가 버튼 이벤트
                 Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
+                //Intent intent2 = new Intent(getApplicationContext(), RequestFriendActivity.class);
 
                 if(submit){
                     if(friend != null){
                         //friend._friendList.add(user._name);
-                        friend.friendsMap.put(user.get_nickname(), user._name);
-                        databaseReference.child(friend.get_nickname()).child("friendsMap").setValue(friend.friendsMap);
+                        int go = 0;
+                        for(String Key : friend.friendsMap.keySet()){
+                            Log.d("KEYEKYEKYEKYKEYK", " ======= " + Key);
+                            if(Key.equals(user.get_nickname())){
+                                go = 1;
+                                Toast.makeText(SearchFriendActivity.this, "이미 친구목록에 있습니다.", Toast.LENGTH_SHORT).show();
+                                break;
+                            }
+                            go = 0;
+                        }
+                        if( go == 0 ) {
+                            friend.friendRequest.add(user.get_nickname());
+                            databaseReference.child(friend.get_nickname()).child("friendRequest").setValue(friend.friendRequest);
+                        }
+                        //friend.friendsMap.put(user.get_nickname(), user._name);
+                        //databaseReference.child(friend.get_nickname()).child("friendsMap").setValue(friend.friendsMap);
                     }
                     intent.putExtra("SentUser", user);
                     startActivity(intent);
+
+
                 }
                 else{
                     Toast.makeText(SearchFriendActivity.this, "추가할 아이디가 없습니다.", Toast.LENGTH_SHORT).show();
@@ -104,7 +121,7 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
                     if (target.equals(snapshot.getValue(User.class).get_nickname())) {
                         friend = (User)snapshot.getValue(User.class);
                         //user._friendList.add(snapshot.getValue(User.class)._name);
-                        user.friendsMap.put(friend.get_nickname(), friend._name);
+                        //user.friendsMap.put(friend.get_nickname(), friend._name);
                         submit = true;
                         if(submit)
                             Toast.makeText(SearchFriendActivity.this, "해당 아이디를 찾았습니다.", Toast.LENGTH_SHORT).show();

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -46,14 +47,22 @@ public class FriendActivity extends AppCompatActivity {
         Button addButton = (Button) findViewById(R.id.addButton);
         Button settingButton = (Button) findViewById(R.id.settingButton);
         Button waitButton = (Button) findViewById(R.id.waitListButton);
+        ImageView redCircle = (ImageView) findViewById(R.id.redImage);
         ArrayList<String> items = new ArrayList<>(); //친구목록을 출력하기 위한 arraylist
 
         //MainActivity에서 user 객체 값 받는 과정
         if ((User) recv.getSerializableExtra("SentUser") != null) {
             user = (User) recv.getSerializableExtra("SentUser");
             databaseReference.child(user.get_nickname()).child("friendsMap").setValue(user.friendsMap);
-            Log.d("CHECK", "[FriendActivity]catch : " + user.friendsMap);
+            Log.d("CHECK", "[FriendActivity]catch : " + user.get_nickname());
         }
+
+        //친구요청이 있을 시 빨간 동그라미 나오게함
+        if(user.friendRequest.size() <= 1)
+            redCircle.setVisibility(View.INVISIBLE);
+        else
+            redCircle.setVisibility(View.VISIBLE);
+
 
         // 친구리스트 만드는 과정 Start
         Set key = user.friendsMap.keySet();

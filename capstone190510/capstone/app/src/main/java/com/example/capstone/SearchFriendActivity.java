@@ -58,6 +58,7 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         String toSearch = searchIdText.getText().toString();
+        renew();
         switch(v.getId()){
             case R.id.searchButton: //검색 이벤트
                 //submit = search(toSearch);
@@ -142,4 +143,22 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
         submit = false;
     }
 
+    void renew() {
+        databaseReference.
+        addListenerForSingleValueEvent(new ValueEventListener() { //데이터를 한 번만 읽도록 바꾸어줌
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (user.get_nickname().equals(snapshot.getValue(User.class).get_nickname())) {
+                        user = (User) snapshot.getValue(User.class);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //Overide
+            }
+        });
+    }
 }

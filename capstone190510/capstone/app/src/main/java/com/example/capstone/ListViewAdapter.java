@@ -53,9 +53,9 @@ public class ListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
-            final Context context = parent.getContext();
+           final Context context = parent.getContext();
             if(infalter == null){
-                infalter = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+              infalter = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             }
             convertView = infalter.inflate(R.layout.listview_item, parent, false);
         }

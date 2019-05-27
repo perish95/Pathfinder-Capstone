@@ -53,6 +53,7 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
         }
 
         renew();
+
         /*
         for(int i = 1; i< user.friendRequest.size() ; i++){
             //temp.add(user.friendRequest.get(i));
@@ -107,11 +108,11 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
                 CheckFriends(FN,nViewTag,position);
                 //AddFriends();
                 //deleteFriends(FN);
-                Toast.makeText(RequestFriendActivity.this, "OOOOOO "+FN , Toast.LENGTH_SHORT).show();
+                Toast.makeText(RequestFriendActivity.this, FN + "님의 친구 신청을 수락했습니다.", Toast.LENGTH_SHORT).show();
                 break;
             case 2: // 거절버튼
                 CheckFriends(FN,nViewTag,position);
-                Toast.makeText(RequestFriendActivity.this, "XXXXXX "+FN, Toast.LENGTH_SHORT).show();
+                Toast.makeText(RequestFriendActivity.this, FN + "님의 친구 신청을 거절했습니다.", Toast.LENGTH_SHORT).show();
                 break;
         }
         // 부모의 View를 가져온다. 즉, 아이템 View임.
@@ -178,5 +179,12 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
         //adapter.notifyDataSetChanged();
         //requestList.setAdapter(adapter);
         //renew();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent it = new Intent(getApplicationContext(), FriendActivity.class);
+        it.putExtra("SentUser", user);
+        startActivity(it);
     }
 }

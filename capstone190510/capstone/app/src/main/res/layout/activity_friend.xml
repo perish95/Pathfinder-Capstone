@@ -55,10 +55,21 @@
         <Button
             android:id="@+id/settingButton"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@drawable/drawer_menu_settings"
             android:textSize="20sp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/redImage"
+        android:layout_width="20dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="172dp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.295"
+        app:srcCompat="@drawable/happening_image" />
 </android.support.constraint.ConstraintLayout>

@@ -206,7 +206,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if(knowMyPos && knowYourPos) {
             Log.d("Fuck", "checkpos " + user.latitude + " " + user.longitude + " " + partnerLati + " " + partnerLongi);
             center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
-            Log.d("Fuck"," checkpos " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left + " " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left);
+            Log.d("Fuck"," checkpos " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left + " " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).right);
         }
     }
 

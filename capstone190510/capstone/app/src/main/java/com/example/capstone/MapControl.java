@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.NaverMap;
@@ -25,15 +27,20 @@ public class MapControl {
     private NaverMap naverMap;
     private NaverPlaceData placeData;
     private ArrayList<Marker> markerList = new ArrayList<Marker>();
+    private ArrayList<InfoWindow> infoList = new ArrayList<InfoWindow>();
     private LinkedHashMap<Marker, MarkerInfo> markerInfoList = new LinkedHashMap<Marker, MarkerInfo>();
+    private Spinner spinner;
+    private String prevQuery;
 
-    MapControl(MapActivity mapActivity, String addr, NaverMap naverMap) {
+    MapControl(MapActivity mapActivity, String addr, NaverMap naverMap, Spinner spinner) {
         this.mapActivity = mapActivity;
         this.addr = addr;
         this.naverMap = naverMap;
+        this.spinner = spinner;
 
         try {
-            placeData = new Point(addr).execute().get();
+            placeData = new Point(addr, spinner).execute().get();
+            Toast.makeText(mapActivity,  placeData.distanceCheck(), Toast.LENGTH_LONG).show();
             // 네트워크 관련 처리는 메인 스레드에서 수행 금지
             // 따라서 비동기 태스크인 AsyncTask에서 백그라운드로 작업 수행
             // execute로 실행하고 get으로 doInBackground의 return 값 받아옴
@@ -116,6 +123,7 @@ public class MapControl {
 
     private void drawInfoWindow(Marker marker) {
         InfoWindow infoWindow = new InfoWindow(); // 정보창
+        infoList.add(infoWindow);
         MarkerInfo markerInfo = markerInfoList.get(marker);
 
         markerInfo.setInfoWindow(infoWindow);
@@ -132,6 +140,23 @@ public class MapControl {
 
         markerInfo.setInfoWindow(infoWindow);
 
+    }
+
+    public String getPrevQuery(){
+        return prevQuery;
+    }
+
+    public void removeMarker(){
+        for(InfoWindow infoWindow : infoList){
+            infoWindow.setMap(null);
+        }
+        infoList.clear();
+
+
+        for(Marker marker : markerList){
+            marker.setMap(null);
+        }
+        markerList.clear();
     }
 }
 

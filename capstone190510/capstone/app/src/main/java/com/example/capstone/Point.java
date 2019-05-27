@@ -2,6 +2,7 @@ package com.example.capstone;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Spinner;
 
 import com.google.gson.Gson;
 import com.naver.maps.geometry.LatLng;
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 class Point extends AsyncTask<String, Integer, NaverPlaceData> {
+    Spinner spinner;
     // 위도
     public double x;
     // 경도
@@ -21,9 +23,12 @@ class Point extends AsyncTask<String, Integer, NaverPlaceData> {
     public String addr;
     // 포인트를 받았는지 여부
     public boolean havePoint;
+    // 테마
+    private String query;
 
-    Point(String addr){
+    Point(String addr, Spinner spinner){
         this.addr = addr;
+        this.spinner = spinner;
     }
 
     @Override
@@ -45,7 +50,9 @@ class Point extends AsyncTask<String, Integer, NaverPlaceData> {
         String clientId = "6h70bzzqaf";// 애플리케이션 클라이언트 아이디값";
         String clientSecret = "3PlxCcT6c4kY1Yi9mlAqN0UKDu2K4lVZFfMpAKoH";// 애플리케이션 클라이언트 시크릿값";
         try {
-            String query = "음식";
+//            String query = "음식";
+//            Spinner spinner = (Spinner)findViewById(R.id.spinner);
+            query = (String) spinner.getSelectedItem();
 
             query = URLEncoder.encode(query, "UTF-8");
             addr = URLEncoder.encode(addr, "UTF-8");
@@ -84,6 +91,7 @@ class Point extends AsyncTask<String, Integer, NaverPlaceData> {
 
         Gson gson = new Gson();
         NaverPlaceData data = new NaverPlaceData();
+        data.query = query;
         try {
             data = gson.fromJson(json, NaverPlaceData.class);
         } catch (Exception e) {

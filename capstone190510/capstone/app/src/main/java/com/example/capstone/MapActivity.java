@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -59,6 +60,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private double[] coord_Array = {0, 0}; // latitude, longitude
     // 람다식 내에서 변수를 가져오기 위해 배열을 썼지만 Side Effect 이슈 존재하는 코딩이라고 함
     // 근데 다른 방법은 더 모르겠어서 그냥 씀
+
+    private MapControl mapControl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +157,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             requestButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MapControl mapControl = new MapControl(mapActivity, String.valueOf(coord_Array[1]) + "," + String.valueOf(coord_Array[0]), naverMap);
+                    if(mapControl != null) {
+                        mapControl.removeMarker();
+                        mapControl = null;
+                    }
+                    mapControl = new MapControl(mapActivity, String.valueOf(coord_Array[1]) + "," + String.valueOf(coord_Array[0]),
+                            naverMap, (Spinner)findViewById(R.id.spinner));
                     mapControl.run();
                 }
             });

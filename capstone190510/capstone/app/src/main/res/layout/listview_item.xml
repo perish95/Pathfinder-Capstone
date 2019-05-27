@@ -16,7 +16,7 @@
             android:layout_height="43dp"
             android:layout_margin="20dp"
             android:text="dd"
-            android:textSize="28sp" />
+            android:textSize="24sp" />
 
     </LinearLayout>
 

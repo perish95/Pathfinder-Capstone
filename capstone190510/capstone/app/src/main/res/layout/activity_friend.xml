@@ -22,7 +22,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="390dp"
+        android:layout_width="0dp"
         android:layout_height="82dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -35,22 +35,36 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            style="?android:attr/borderlessButtonStyle"
             android:id="@+id/addButton"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="50"
+            android:layout_weight="2"
             android:text="친구추가"
             android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/waitListButton"
-            style="?android:attr/borderlessButtonStyle"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="50"
-            android:text="친구요청목록"
-            android:textSize="20sp" />
+            android:layout_weight="2">
+
+            <Button
+                android:id="@+id/waitListButton"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="12"
+                android:text="친구요청목록"
+                android:layout_centerInParent="true"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/redImage"
+                android:layout_width="20dp"
+                android:layout_height="21dp"
+                android:layout_alignParentLeft="true"
+                app:srcCompat="@drawable/happening_image" />
+        </RelativeLayout>
 
         <Button
             android:id="@+id/settingButton"
@@ -60,16 +74,7 @@
             android:layout_weight="1"
             android:background="@drawable/drawer_menu_settings"
             android:textSize="20sp" />
+
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/redImage"
-        android:layout_width="20dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="172dp"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.295"
-        app:srcCompat="@drawable/happening_image" />
 </android.support.constraint.ConstraintLayout>

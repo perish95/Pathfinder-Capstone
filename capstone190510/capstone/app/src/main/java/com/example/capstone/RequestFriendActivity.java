@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +40,8 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
     private User friend;
     private DatabaseReference mref = firebaseDatabase.getReference("UserInfo");
     private ArrayList<ItemData> temp = new ArrayList<ItemData>();
+
+//    final ArrayAdapter adapter2 = new ArrayAdapter(this, android.R.layout.simple_list_item_single_choice, temp) ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +136,13 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
     }
 
     public void setList(){
+        if(user.friendRequest.size() == 1){
+            requestList = (ListView) findViewById(R.id.RequestList);
+            adapter = new ListViewAdapter(temp);
+            requestList.setAdapter(adapter);
+            requestList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        }
+
         for(int i = 1; i< user.friendRequest.size() ; i++){
             //temp.add(user.friendRequest.get(i));
             ItemData oItem = new ItemData();
@@ -142,6 +152,10 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
             requestList = (ListView) findViewById(R.id.RequestList);
             adapter = new ListViewAdapter(temp);
             requestList.setAdapter(adapter);
+            requestList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
+            intent.putExtra("SentUser", user); //FriendActivity에 user값 전달
+           // startActivity(intent);
         }
     }
     public void AddFriends(){
@@ -154,12 +168,15 @@ public class RequestFriendActivity extends AppCompatActivity implements View.OnC
     public void deleteFriends(String FN,String Position){
         user.friendRequest.remove(FN);
         int index = Integer.parseInt(Position);
-        temp.remove(index);
-
+        //temp.remove(index);
+        temp.clear();
         Log.d("Ddd","ddd ===" + index);
         databaseReference.child(user.get_nickname()).child("friendRequest").setValue(user.friendRequest);
-        adapter.notifyDataSetChanged();
-        requestList.setAdapter(adapter);
+        //requestList.getCheckedItemPosition();
+        renew();
+        //requestList.clearChoices();
+        //adapter.notifyDataSetChanged();
+        //requestList.setAdapter(adapter);
         //renew();
     }
 }

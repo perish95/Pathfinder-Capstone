@@ -160,7 +160,7 @@ public class FriendActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void dialogReceive(String partner, String id) {
+    private void dialogReceive(String partner, String id) { //내가 요청을 받을 때
         AlertDialog.Builder requestAlt = new AlertDialog.Builder(this);
         requestAlt.setMessage(partner + "님이 약속을 신청하였습니다. 수락하시겠습니까?").setCancelable(false).setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
@@ -170,6 +170,8 @@ public class FriendActivity extends AppCompatActivity {
                         databaseReference.child(id).child("waitAccept").setValue(true);
                         Intent goMap = new Intent(getApplicationContext(), MapActivity.class);
                         goMap.putExtra("FriendID", id);
+                        user.myFrined = id;
+                        Log.d("deli", "deli" + id);
                         goMap.putExtra("SentUser", user);
                         startActivity(goMap);
                     }
@@ -219,6 +221,7 @@ public class FriendActivity extends AppCompatActivity {
             if (user.friendsMap.get(key).equals(target)) {
                 map.put(key, user.get_nickname()); //<요청받는 사람, 요청하는 사람>
                 friendKey = key;
+                Log.d("check","deliver : " + key);
                 mRef.child("/MeetingInfo/").setValue(map);
             }
         }
@@ -247,7 +250,7 @@ public class FriendActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        //상대가 요청을 받았는지 확인
+        //상대가 요청을 받았는지 확인, 내가 요청을 했을 때
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
@@ -257,6 +260,7 @@ public class FriendActivity extends AppCompatActivity {
                 if(dataSnapshot.getValue(User.class).waitAccept){
                     Intent sent = new Intent(getApplicationContext(), MapActivity.class);
                     sent.putExtra("FriendID", friendKey);
+                    user.myFrined = friendKey;
                     sent.putExtra("SentUser", user);
                     startActivity(sent);
                 }

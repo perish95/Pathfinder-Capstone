@@ -72,15 +72,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         if ((User) recv.getSerializableExtra("SentUser") != null) {
             user = (User) recv.getSerializableExtra("SentUser");
-            Log.d("CHECK", "[MapActivity]catch : " + user.get_nickname());
+            Log.d("CHECK", "[MapActivity]catch : " + user.myFrined);
+            friendKey = user.myFrined;
         }
 
-        if(recv.getStringExtra("FriendID") != null){
+        else if(getIntent().getStringExtra("FriendID") != null){
             friendKey = recv.getStringExtra("FriendID");
             Log.d("CHECK", "[MapActivity]catch, friendkey : " + friendKey);
         }
 
-        updatePosition(); // partnerLongi, partnerLati에 좌표를 넣어주는 메소드
+
+
+        Log.d("CHECK", "not enter : " + friendKey);
+        updatePosition(friendKey); // partnerLongi, partnerLati에 좌표를 넣어주는 메소드
 
 //        ActionBar actionBar = getSupportActionBar();
 //        if (actionBar != null) {
@@ -136,18 +140,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         LocationTrackingMode mode = naverMap.getLocationTrackingMode(); // LocationTrackingMode는 None / Follow / NoFollow / Face 모드 있음
         locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
 
+
         naverMap.addOnLocationChangeListener((coord) -> {
-            coord_Array[0] = coord.getLatitude(); // 위도 경도 더블형으로 받은거임 알아서 갖다 쓰셈
-            coord_Array[1] = coord.getLongitude();
+            //coord_Array[0] = coord.getLatitude(); // 위도 경도 더블형으로 받은거임 알아서 갖다 쓰셈
+            //coord_Array[1] = coord.getLongitude();
             user.latitude = coord.getLatitude();
             user.longitude = coord.getLongitude();
             databaseReference.child(user.get_nickname()).child("latitude").setValue(user.latitude);
             databaseReference.child(user.get_nickname()).child("longitude").setValue(user.longitude);
+            Log.d("Check","submit server data : " + user.latitude);
             knowMyPos = true;
             calcPosition();
 
             // 디버그용
-            Toast.makeText(this, getString(R.string.check_coord, coord_Array[0], coord_Array[1]), Toast.LENGTH_SHORT).show(); // 맵에 위치 변경 리스너 추가 후 현재 사용자의 위치가 변경되면 좌표 자동 출력
+            Toast.makeText(this, getString(R.string.check_coord, user.latitude, user.longitude), Toast.LENGTH_SHORT).show(); // 맵에 위치 변경 리스너 추가 후 현재 사용자의 위치가 변경되면 좌표 자동 출력
 
             // 요청 버튼
             final Button requestButton = (Button) findViewById(R.id.requestButton);
@@ -179,16 +185,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    void updatePosition(){ //상대의 위치정보를 얻어오기 위한 메소드
+    void updatePosition(final String friendKey){ //상대의 위치정보를 얻어오기 위한 메소드
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("check","enter for " + dataSnapshot.getValue(User.class).get_nickname());
+                Log.d("check","enter for 2 " + friendKey);
                 if(dataSnapshot.getValue(User.class).get_nickname().equals(friendKey)){
                     partnerLati = dataSnapshot.getValue(User.class).latitude;
                     partnerLongi = dataSnapshot.getValue(User.class).longitude;
-                    Log.d("check","enter for " + partnerLati);
                     knowYourPos = true;
                     calcPosition();
                 }
@@ -257,7 +264,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         knowMyPos = false;
         return new Pair<Double,Double>(resLat, resLon);//중간지점 경위도 좌표 반환
     }
+
 }
+
 class Pair<L, R> {
     final L left;
     final R right;

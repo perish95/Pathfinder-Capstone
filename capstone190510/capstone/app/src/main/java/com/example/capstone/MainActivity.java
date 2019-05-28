@@ -1,14 +1,10 @@
 package com.example.capstone;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,34 +24,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
     private DatabaseReference mref = firebaseDatabase.getReference("UserInfo");
     private FirebaseAuth firebaseAuth;
 
-    private EditText email_login;
-    private EditText pwd_login;
-    private CheckBox autoCheck;
     private boolean saveLoginData;
     private SharedPreferences auto;
+    private EditText email_login;
+    private EditText pwd_login;
     private String id;
     private String pwd;
-
+    private CheckBox autoCheck;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
 
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         firebaseAuth = firebaseAuth.getInstance();
-
-        final Button loginButton = (Button) findViewById(R.id.loginButton);
-        final Button signupButton = (Button) findViewById(R.id.signupButton);
-        final Button mapButton = (Button) findViewById(R.id.mapButton);
         auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         load();
+        final Button loginButton = (Button) findViewById(R.id.loginButton);
+        final Button signupButton = (Button) findViewById(R.id.signupButton);
         email_login = (EditText) findViewById(R.id.idText);
         pwd_login = (EditText) findViewById(R.id.pwText);
         autoCheck = (CheckBox) findViewById(R.id.autoLogin);
@@ -66,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
             autoCheck.setChecked(saveLoginData);
             signIn();
         }
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,21 +70,17 @@ public class MainActivity extends AppCompatActivity {
                     save();
                     signIn();
                 }
+                //Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
+                //startActivity(intent);
+                //databaseReference.child("message").push().setValue("2");
             }
         });
+
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
                 startActivity(intent);
             }
         });
@@ -122,10 +111,13 @@ public class MainActivity extends AppCompatActivity {
         pwd = auto.getString("PWD", "");
     }
 
+
     public void signIn() {
         String email = email_login.getText().toString().trim();
         String pwd = pwd_login.getText().toString().trim();
         loginUser(email, pwd);
+        //Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
+        //startActivity(intent);
     }
 
     // 로그인
@@ -134,12 +126,14 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        //String id  =  email.substring(0 ,email.indexOf("@"));
                         if (task.isSuccessful()) {
                             // 로그인 성공
                             mref.addListenerForSingleValueEvent(new ValueEventListener() { //데이터를 한 번만 읽도록 바꾸어줌
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        Log.d("CHECK", "[MainActivity]catch : " + snapshot);
                                         if (email.equals(snapshot.getValue(User.class).get_id())) {
                                             User user = snapshot.getValue(User.class);
                                             Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
@@ -165,4 +159,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }

@@ -81,7 +81,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.d("CHECK", "[MapActivity]catch, friendkey : " + friendKey);
         }
 
-        updatePosition(); // partnerLongi, partnerLati에 좌표를 넣어주는 메소드
 
 //        ActionBar actionBar = getSupportActionBar();
 //        if (actionBar != null) {
@@ -140,12 +139,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         naverMap.addOnLocationChangeListener((coord) -> {
             coord_Array[0] = coord.getLatitude(); // 위도 경도 더블형으로 받은거임 알아서 갖다 쓰셈
             coord_Array[1] = coord.getLongitude();
-//            user.latitude = coord.getLatitude();
-//            user.longitude = coord.getLongitude();
-//            databaseReference.child(user.get_nickname()).child("latitude").setValue(user.latitude);
-//            databaseReference.child(user.get_nickname()).child("longitude").setValue(user.longitude);
+            user.latitude = coord.getLatitude();
+            user.longitude = coord.getLongitude();
+            databaseReference.child(user.get_nickname()).child("latitude").setValue(user.latitude);
+            databaseReference.child(user.get_nickname()).child("longitude").setValue(user.longitude);
             knowMyPos = true;
-            calcPosition();
 
             // 디버그용
             Toast.makeText(this, getString(R.string.check_coord, coord_Array[0], coord_Array[1]), Toast.LENGTH_SHORT).show(); // 맵에 위치 변경 리스너 추가 후 현재 사용자의 위치가 변경되면 좌표 자동 출력
@@ -157,11 +155,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             requestButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    updatePosition(); // partnerLongi, partnerLati에 좌표를 넣어주는 메소드
+                    Pair<Double, Double> centerPos = calcPosition();
+
+                    if(centerPos == null){
+                        if(!knowMyPos) Toast.makeText(mapActivity, "나의 위치를 찾을 수 없습니다. 재검색 버튼을 눌러주세요.", Toast.LENGTH_LONG).show();
+                        else if(!knowYourPos)Toast.makeText(mapActivity, "상대방 위치 정보를 받을 수 없습니다.", Toast.LENGTH_LONG).show();
+                    }
+
                     if(mapControl != null) {
                         mapControl.removeMarker();
                         mapControl = null;
                     }
-                    mapControl = new MapControl(mapActivity, String.valueOf(coord_Array[1]) + "," + String.valueOf(coord_Array[0]),
+                    //경도 위도 순서
+                    mapControl = new MapControl(mapActivity, String.valueOf(centerPos.right) + "," + String.valueOf(centerPos.left),
                             naverMap, (Spinner)findViewById(R.id.spinner));
                     mapControl.run();
                 }
@@ -180,7 +187,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     partnerLongi = dataSnapshot.getValue(User.class).longitude;
                     Log.d("check","enter for " + partnerLati);
                     knowYourPos = true;
-                    calcPosition();
                 }
             }
             @Override
@@ -192,12 +198,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    void calcPosition(){
+    Pair<Double, Double> calcPosition(){
         if(knowMyPos && knowYourPos) {
             Log.d("Fuck", "checkpos " + user.latitude + " " + user.longitude + " " + partnerLati + " " + partnerLongi);
             center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
-            Log.d("Fuck"," checkpos " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left + " " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).right);
+            Log.d("Fuck"," checkpos " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left + " "
+                    + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).right);
+
+            return center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
         }
+
+        return null;
     }
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {//두 경위도 좌표 사이 거리

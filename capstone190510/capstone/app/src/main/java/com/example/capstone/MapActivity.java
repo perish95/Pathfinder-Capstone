@@ -196,7 +196,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if(knowMyPos && knowYourPos) {
             Log.d("Fuck", "checkpos " + user.latitude + " " + user.longitude + " " + partnerLati + " " + partnerLongi);
             center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
-            Log.d("Fuck"," checkpos " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left + " " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left);
+            Log.d("Fuck"," checkpos " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).left + " " + center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi).right);
         }
     }
 
@@ -216,7 +216,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     private Pair<Double, Double> center_of_two_point(double lat1, double lon1, double lat2, double lon2) {//두 경위도 좌표의 중간 지점의 경위도 좌표
         double theta = Math.toRadians(lon2 - lon1);
-        double x = Math.cos(Math.toRadians(lat1)) * Math.cos(theta);
+        lat1=Math.toRadians(lat1);
+        lat2=Math.toRadians(lat2);
+        lon1=Math.toRadians(lon1);
+        double x = Math.cos(lat1) * Math.cos(theta);
         double y = Math.cos(lat2) * Math.sin(theta);
         double resLat = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + x) * (Math.cos(lat1) + x) + y * y));
         double resLon = lon1 + Math.atan2(y, Math.cos(lat1) + x);

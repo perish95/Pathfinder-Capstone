@@ -77,9 +77,6 @@ public class MainActivity extends AppCompatActivity {
                     save();
                     signIn();
                 }
-                //Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
-                //startActivity(intent);
-                //databaseReference.child("message").push().setValue("2");
             }
         });
 
@@ -129,8 +126,6 @@ public class MainActivity extends AppCompatActivity {
         String email = email_login.getText().toString().trim();
         String pwd = pwd_login.getText().toString().trim();
         loginUser(email, pwd);
-        //Intent intent = new Intent(getApplicationContext(), FriendActivity.class);
-        //startActivity(intent);
     }
 
     // 로그인
@@ -145,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                        Log.d("CHECK", "[MainActivity]catch : " + snapshot);
                                         if (email.equals(snapshot.getValue(User.class).get_id())) {
                                             User user = snapshot.getValue(User.class);
                                             Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();

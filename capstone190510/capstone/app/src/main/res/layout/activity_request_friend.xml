@@ -29,16 +29,20 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="30sp" />
+
     </LinearLayout>
 
     <ListView
         android:id="@+id/RequestList"
-        android:layout_width="395dp"
-        android:layout_height="641dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+    </ListView>
+
 </android.support.constraint.ConstraintLayout>

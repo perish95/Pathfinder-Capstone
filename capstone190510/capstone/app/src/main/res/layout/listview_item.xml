@@ -14,26 +14,26 @@
             android:id="@+id/FriendNameText"
             android:layout_width="match_parent"
             android:layout_height="43dp"
-            android:layout_margin="15dp"
+            android:layout_margin="20dp"
             android:text="dd"
-            android:textSize="28sp" />
+            android:textSize="24sp" />
 
     </LinearLayout>
 
     <Button
         android:id="@+id/AddFriendButton"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="25dp"
         android:background="@drawable/ok_button" />
 
     <Button
         android:id="@+id/FriendCancelButton"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="15dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="25dp"
         android:background="@drawable/cancelbutton" />
 
 </LinearLayout>

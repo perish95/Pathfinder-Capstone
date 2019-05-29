@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -32,11 +33,13 @@ import static android.R.layout.simple_list_item_1;
 
 public class FriendActivity extends AppCompatActivity {
     private User user;
+    private User friend;
     private String friendKey;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference("UserInfo");
     private DatabaseReference mRef = firebaseDatabase.getReference();
-
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle bundle) {
         Log.v("확인", "FriendActivity 시작 확인 ***********************************");
@@ -48,7 +51,7 @@ public class FriendActivity extends AppCompatActivity {
         Button settingButton = (Button) findViewById(R.id.settingButton);
         Button waitButton = (Button) findViewById(R.id.waitListButton);
         ImageView redCircle = (ImageView) findViewById(R.id.redImage);
-        ArrayList<String> items = new ArrayList<>(); //친구목록을 출력하기 위한 arraylist
+        items = new ArrayList<>(); //친구목록을 출력하기 위한 arraylist
 
         //MainActivity에서 user 객체 값 받는 과정
         if ((User) recv.getSerializableExtra("SentUser") != null) {
@@ -77,9 +80,10 @@ public class FriendActivity extends AppCompatActivity {
 
         Log.d("CHECK", "[FriendActivity]catch : keyName = " + items); //잘 만들어졌는지 확인
 
-        ListAdapter adapter = new ArrayAdapter<String>(this, simple_list_item_1, items); //Listview에 적용
+        adapter = new ArrayAdapter<String>(this, simple_list_item_1, items); //Listview에 적용
         final ListView listView = (ListView) findViewById(R.id.friendListView);
         listView.setAdapter(adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,24 +137,20 @@ public class FriendActivity extends AppCompatActivity {
     private void dialogRequest(String partner) {
         AlertDialog.Builder requestAlt = new AlertDialog.Builder(this);
         //int currentPos = getPosition(); //currentPos는 현재 자신의 위치 뒤에 들어갈 예정
-        requestAlt.setMessage(partner + "님에게 약속을 신청하시겠습니까?").setCancelable(false).setPositiveButton("예",
+        requestAlt.setMessage(partner + "님을 친구삭제 하시겠습니까?").setCancelable(false).setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Click "yes"
-                        requestPromise(partner); //서버로 약속 요청을 하는 메소드
+                        Toast.makeText(FriendActivity.this, "친구삭제", Toast.LENGTH_SHORT).show();
+                        deleteFriend(partner);
+                        //requestPromise(partner); //서버로 약속 요청을 하는 메소드
                     }
                 }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Click "No"
                 dialog.cancel();
-            }
-        }).setNeutralButton("위치 재검색", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //Click "Research"
-                //getPosition();
             }
         });
 
@@ -160,6 +160,32 @@ public class FriendActivity extends AppCompatActivity {
         alert.show();
     }
 
+    void deleteFriend(final String target){
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (target.equals(snapshot.getValue(User.class)._name)) {
+                        friend = (User)snapshot.getValue(User.class);
+                        friend.friendsMap.remove(user.get_nickname());
+                        user.friendsMap.remove(friend.get_nickname());
+                        databaseReference.child(user.get_nickname()).child("friendsMap").setValue(user.friendsMap);
+                        databaseReference.child(friend.get_nickname()).child("friendsMap").setValue(friend.friendsMap);
+                        //Toast.makeText(FriendActivity.this, "친구삭제", Toast.LENGTH_SHORT).show();
+                        items.remove(target);
+                        adapter.notifyDataSetChanged();
+                        break;
+                        //Toast.makeText(FriendActivity.this, "찾찾찾", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.v("NOTICE","Don't search data");
+            }
+        });
+    }
     private void dialogReceive(String partner, String id) { //내가 요청을 받을 때
         AlertDialog.Builder requestAlt = new AlertDialog.Builder(this);
         requestAlt.setMessage(partner + "님이 약속을 신청하였습니다. 수락하시겠습니까?").setCancelable(false).setPositiveButton("예",
@@ -197,6 +223,7 @@ public class FriendActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Click "yes"
+
                         Intent it = new Intent(getApplicationContext(), MainActivity.class);
                         it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(it);

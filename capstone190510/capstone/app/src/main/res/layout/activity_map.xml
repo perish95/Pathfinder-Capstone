@@ -12,14 +12,20 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="50dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:textAlignment="center">
 
             <TextView
                 android:id="@+id/themeTextView"
                 style="@android:style/Widget.Holo.TextView"
-                android:layout_width="110dp"
-                android:layout_height="31dp"
-                android:layout_gravity="fill_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#DADADA"
                 android:text="테마"
                 android:textAlignment="center"
                 android:textColor="#000000"
@@ -28,8 +34,9 @@
 
             <Spinner
                 android:id="@+id/spinner"
-                android:layout_width="316dp"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
                 android:entries="@array/theme"
                 android:textAlignment="center" />
 
@@ -38,17 +45,25 @@
         <FrameLayout
             android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="651dp">
+            android:layout_height="wrap_content"
+            android:layout_weight="9">
 
         </FrameLayout>
 
-        <Button
-            android:id="@+id/requestButton"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="0dp"
-            android:text="RequestTemp" />
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3">
+
+            <Button
+                android:id="@+id/requestButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:text="RequestTemp" />
+
+        </TableRow>
 
     </LinearLayout>
 

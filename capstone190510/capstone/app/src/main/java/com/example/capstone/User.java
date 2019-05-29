@@ -14,6 +14,7 @@ public class User implements Serializable {
     public double latitude; //위도
     public double longitude; //경도
     public boolean waitAccept;
+    public String myFrined; //내가 신청한 친구의 키값
 
     private String _id;
     private String _password;
@@ -47,6 +48,7 @@ public class User implements Serializable {
         return _password;
     }
     public String get_nickname(){ return _nickname; }
+    //public void initMyFriend(){myFrined = null;}
 
     //public List<String> get_friendList(){ return _friendList; }
 }

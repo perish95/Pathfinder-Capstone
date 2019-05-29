@@ -137,20 +137,24 @@ public class FriendActivity extends AppCompatActivity {
     private void dialogRequest(String partner) {
         AlertDialog.Builder requestAlt = new AlertDialog.Builder(this);
         //int currentPos = getPosition(); //currentPos는 현재 자신의 위치 뒤에 들어갈 예정
-        requestAlt.setMessage(partner + "님을 친구삭제 하시겠습니까?").setCancelable(false).setPositiveButton("예",
+        requestAlt.setMessage(partner + "님에게 약속을 신청하시겠습니까?").setCancelable(false).setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Click "yes"
-                        Toast.makeText(FriendActivity.this, "친구삭제", Toast.LENGTH_SHORT).show();
-                        deleteFriend(partner);
-                        //requestPromise(partner); //서버로 약속 요청을 하는 메소드
+                        requestPromise(partner); //서버로 약속 요청을 하는 메소드
                     }
                 }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Click "No"
                 dialog.cancel();
+            }
+        }).setNeutralButton("친구 삭제", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteFriend(partner);
+                Toast.makeText(FriendActivity.this, partner + "님을 삭제하였습니다.", Toast.LENGTH_SHORT).show();
             }
         });
 

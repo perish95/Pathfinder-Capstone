@@ -66,7 +66,6 @@ public class FriendActivity extends AppCompatActivity {
         else
             redCircle.setVisibility(View.VISIBLE);
 
-
         // 친구리스트 만드는 과정 Start
         Set key = user.friendsMap.keySet();
 
@@ -118,8 +117,6 @@ public class FriendActivity extends AppCompatActivity {
 
 
         /*if (recv.getStringExtra("deli") != null) {
-            Log.d("확인", "객체확인" + recv);
-            Log.d("test", "stinrg" + recv.getStringExtra("deli"));
             String input = recv.getStringExtra("deli");
             ((ArrayAdapter) adapter).notifyDataSetChanged();
         }*/
@@ -199,9 +196,8 @@ public class FriendActivity extends AppCompatActivity {
                         //Click "yes"
                         databaseReference.child(id).child("waitAccept").setValue(true);
                         Intent goMap = new Intent(getApplicationContext(), MapActivity.class);
-                        goMap.putExtra("FriendID", id);
+                        //goMap.putExtra("FriendID", id);
                         user.myFrined = id;
-                        Log.d("deli", "deli" + id);
                         goMap.putExtra("SentUser", user);
                         startActivity(goMap);
                     }
@@ -247,13 +243,10 @@ public class FriendActivity extends AppCompatActivity {
     }
 
     private void requestPromise(String target) {
-        HashMap<String, String> map = new HashMap<>(); //약속을 서버에 올리는 hashmap
         for (String key : user.friendsMap.keySet()) {
             if (user.friendsMap.get(key).equals(target)) {
-                map.put(key, user.get_nickname()); //<요청받는 사람, 요청하는 사람>
                 friendKey = key;
-                Log.d("check","deliver : " + key);
-                mRef.child("/MeetingInfo/").setValue(map);
+                mRef.child("/MeetingInfo/" + key).setValue(user.get_nickname());
             }
         }
     }
@@ -263,6 +256,7 @@ public class FriendActivity extends AppCompatActivity {
         mRef.child("MeetingInfo").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("check","enter updatePromise1 : " );
                 String partner = null;
                 String partnerID = null;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -288,6 +282,7 @@ public class FriendActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("check","enter updatePromise2");
                 if(dataSnapshot.getValue(User.class).waitAccept){
                     Intent sent = new Intent(getApplicationContext(), MapActivity.class);
                     sent.putExtra("FriendID", friendKey);

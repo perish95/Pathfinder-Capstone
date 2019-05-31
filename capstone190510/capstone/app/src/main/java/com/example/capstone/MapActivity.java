@@ -34,7 +34,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.naver.maps.geometry.LatLng;
-import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
@@ -44,7 +43,6 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
-import com.naver.maps.map.widget.LocationButtonView;
 
 import java.util.concurrent.ExecutionException;
 
@@ -63,6 +61,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference("UserInfo");
+    private DatabaseReference mRef = firebaseDatabase.getReference("MeetingInfo");
 
     private double[] coord_Array = {0, 0}; // latitude, longitude
     // 람다식 내에서 변수를 가져오기 위해 배열을 썼지만 Side Effect 이슈 존재하는 코딩이라고 함
@@ -71,19 +70,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d("CHECK", "[MapActivity]start : *******");
         setContentView(R.layout.activity_map);
 
         Intent recv = getIntent();
 
         if ((User) recv.getSerializableExtra("SentUser") != null) {
             user = (User) recv.getSerializableExtra("SentUser");
-            Log.d("CHECK", "[MapActivity]catch : " + user.myFrined);
-            friendKey = user.myFrined;
-        } else if (getIntent().getStringExtra("FriendID") != null) {
-            friendKey = recv.getStringExtra("FriendID");
-            Log.d("CHECK", "[MapActivity]catch, friendkey : " + friendKey);
+            Log.d("CHECK", "[MapActivity]catch : " + user.myFriend);
+            friendKey = user.myFriend;
         }
+
+        databaseReference.child(user.get_nickname()).child("waitAccept").setValue(false); //init
+        databaseReference.child(user.get_nickname()).child("latitude").setValue(0); //init
+        databaseReference.child(user.get_nickname()).child("longitude").setValue(0); //init
+        mRef.child(user.get_nickname()).removeValue(); //init
 
 
         Log.d("CHECK", "not enter : " + friendKey);
@@ -178,8 +179,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 user.longitude = location.getLongitude();
                 databaseReference.child(user.get_nickname()).child("latitude").setValue(user.latitude);
                 databaseReference.child(user.get_nickname()).child("longitude").setValue(user.longitude);
-                Log.d("Check", "submit server data : " + user.latitude);
                 knowMyPos = true;
+                Log.d("Check", "knowMyPos : " + knowMyPos);
+
                 calcPosition();
 
                 naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
@@ -250,6 +252,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     partnerLati = dataSnapshot.getValue(User.class).latitude;
                     partnerLongi = dataSnapshot.getValue(User.class).longitude;
                     knowYourPos = true;
+                    Log.d("check", "knowYourPos" + knowYourPos);
                     calcPosition();
                 }
             }

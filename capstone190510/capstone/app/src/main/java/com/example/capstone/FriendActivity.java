@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -65,6 +63,7 @@ public class FriendActivity extends AppCompatActivity {
             redCircle.setVisibility(View.INVISIBLE);
         else
             redCircle.setVisibility(View.VISIBLE);
+
 
 
         // 친구리스트 만드는 과정 Start
@@ -199,9 +198,9 @@ public class FriendActivity extends AppCompatActivity {
                         //Click "yes"
                         databaseReference.child(id).child("waitAccept").setValue(true);
                         Intent goMap = new Intent(getApplicationContext(), MapActivity.class);
-                        goMap.putExtra("FriendID", id);
-                        user.myFrined = id;
-                        Log.d("deli", "deli" + id);
+                        //goMap.putExtra("FriendID", id);
+                        user.myFriend = id;
+                        Log.d("check", "dialogReceive" + user.myFriend);
                         goMap.putExtra("SentUser", user);
                         startActivity(goMap);
                     }
@@ -247,13 +246,10 @@ public class FriendActivity extends AppCompatActivity {
     }
 
     private void requestPromise(String target) {
-        HashMap<String, String> map = new HashMap<>(); //약속을 서버에 올리는 hashmap
         for (String key : user.friendsMap.keySet()) {
             if (user.friendsMap.get(key).equals(target)) {
-                map.put(key, user.get_nickname()); //<요청받는 사람, 요청하는 사람>
                 friendKey = key;
-                Log.d("check","deliver : " + key);
-                mRef.child("/MeetingInfo/").setValue(map);
+                mRef.child("/MeetingInfo/" + key).setValue(user.get_nickname());
             }
         }
     }
@@ -284,16 +280,19 @@ public class FriendActivity extends AppCompatActivity {
         //상대가 요청을 받았는지 확인, 내가 요청을 했을 때
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {Log.d("check", "updatePromise not enter " + user.myFriend); }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.getValue(User.class).waitAccept){
                     Intent sent = new Intent(getApplicationContext(), MapActivity.class);
-                    sent.putExtra("FriendID", friendKey);
-                    user.myFrined = friendKey;
-                    sent.putExtra("SentUser", user);
-                    startActivity(sent);
+                    Log.d("check", "updatePromise not enter " + user.myFriend);
+                    if(friendKey != null) {
+                        user.myFriend = friendKey;
+                        Log.d("check", "updatePromise enter" + user.myFriend);
+                        sent.putExtra("SentUser", user);
+                        startActivity(sent);
+                    }
                 }
             }
             @Override

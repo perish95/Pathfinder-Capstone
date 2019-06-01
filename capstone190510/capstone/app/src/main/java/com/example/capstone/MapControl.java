@@ -1,31 +1,27 @@
 package com.example.capstone;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class MapControl {
     private MapActivity mapActivity;
     private String addr;
     private NaverMap naverMap;
+    private Pair<NaverPlaceData, NaverPlaceData> placeAndMetro;
     private NaverPlaceData placeData;
+    private NaverPlaceData metroPlaceData;
     private ArrayList<Marker> markerList = new ArrayList<Marker>();
     private ArrayList<InfoWindow> infoList = new ArrayList<InfoWindow>();
     private LinkedHashMap<Marker, MarkerInfo> markerInfoList = new LinkedHashMap<Marker, MarkerInfo>();
@@ -39,7 +35,9 @@ public class MapControl {
         this.spinner = spinner;
 
         try {
-            placeData = new Point(addr, spinner).execute().get();
+            placeAndMetro = new Point(addr, spinner).execute().get();
+            placeData = placeAndMetro.left;
+            metroPlaceData = placeAndMetro.right;
             Toast.makeText(mapActivity,  placeData.distanceCheck(), Toast.LENGTH_LONG).show();
             // 네트워크 관련 처리는 메인 스레드에서 수행 금지
             // 따라서 비동기 태스크인 AsyncTask에서 백그라운드로 작업 수행
@@ -140,6 +138,30 @@ public class MapControl {
 
         markerInfo.setInfoWindow(infoWindow);
 
+        drawMiddle(naverMap, new Pair<Double, Double>(metroPlaceData.places.get(0).x, metroPlaceData.places.get(0).y)); // 중간 지점 표시
+
+    }
+
+
+    private void drawMiddle(NaverMap naverMap, Pair<Double, Double> centerPos){
+        Marker marker = new Marker();
+        marker.setPosition(new LatLng(centerPos.right, centerPos.left));
+        marker.setMap(naverMap);
+
+        InfoWindow infoWindow = new InfoWindow();
+        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(mapActivity) {
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+
+                return (CharSequence) "만남 추천 역";
+            }
+        });
+        infoWindow.open(marker);
+
+        LatLng latLng = new LatLng(centerPos.right, centerPos.left);
+        CameraPosition cameraPosition = new CameraPosition(latLng, 14);
+        naverMap.setCameraPosition(cameraPosition);
     }
 
     public String getPrevQuery(){

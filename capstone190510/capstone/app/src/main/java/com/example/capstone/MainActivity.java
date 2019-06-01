@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean saveLoginData;
     private SharedPreferences auto;
     private EditText email_login;
+
     private EditText pwd_login;
     private String id;
     private String pwd;

@@ -198,6 +198,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         naverMap, (Spinner)findViewById(R.id.spinner));
                 mapControl.run();
 
+                // 최종 목적지 반환 받는 예시
+                // NaverPlaceData.places lastDestination = mapControl.getPlaceData();
+
             }
         });
     }

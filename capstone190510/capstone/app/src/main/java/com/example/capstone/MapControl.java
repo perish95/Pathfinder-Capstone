@@ -27,6 +27,8 @@ public class MapControl {
     private LinkedHashMap<Marker, MarkerInfo> markerInfoList = new LinkedHashMap<Marker, MarkerInfo>();
     private Spinner spinner;
     private String prevQuery;
+    private boolean possibleGetPlace;
+    private NaverPlaceData.places currentReturnPlace;
 
     MapControl(MapActivity mapActivity, String addr, NaverMap naverMap, Spinner spinner) {
         this.mapActivity = mapActivity;
@@ -104,10 +106,13 @@ public class MapControl {
                             markerInfo.seeBasic();
                             markerInfo.markerAdapterChange();
                             markerInfo.setOpenState(State.CLOSE);
+                            possibleGetPlace = true;
+                            currentReturnPlace = place;
                             break;
                         case CLOSE:
                             markerInfo.infoWindow.open(marker);
                             markerInfo.setOpenState(State.OPEN);
+                            possibleGetPlace = false;
                             break;
                     }
                 }
@@ -179,6 +184,11 @@ public class MapControl {
             marker.setMap(null);
         }
         markerList.clear();
+    }
+
+    public NaverPlaceData.places getPlaceData() {
+        if(possibleGetPlace) return currentReturnPlace;
+        else return null;
     }
 }
 

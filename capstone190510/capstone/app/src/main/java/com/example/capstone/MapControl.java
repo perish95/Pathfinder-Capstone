@@ -1,6 +1,7 @@
 package com.example.capstone;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Spinner;
 import android.widget.Toast;
 

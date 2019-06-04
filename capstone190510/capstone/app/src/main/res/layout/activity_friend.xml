@@ -83,9 +83,9 @@
         android:id="@+id/bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="512dp"
+        android:layout_marginTop="460dp"
         app:layout_constraintEnd_toEndOf="@+id/friendListView"
-        app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/friendListView"
         app:layout_constraintTop_toTopOf="@+id/friendListView"
         app:srcCompat="@drawable/background_image" />

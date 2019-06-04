@@ -252,10 +252,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     yourTheme = dataSnapshot.getValue().toString();
                     Log.d("theme!!!" ,"2 " + yourTheme);
 
+                    if(mapControl != null) {
+                        mapControl.removeMarker();
+                        mapControl = null;
+                    }
+
                     centerPos = center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
 
                     mapControl = new MapControl(mapActivity, String.valueOf(centerPos.right) + "," + String.valueOf(centerPos.left),
-                            currentNaverMap, (Spinner)findViewById(R.id.spinner));
+                            currentNaverMap, yourTheme);
                     mapControl.run();
                 }
             }

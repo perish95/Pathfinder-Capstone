@@ -67,9 +67,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private DatabaseReference mRef = firebaseDatabase.getReference("MeetingInfo");
     private DatabaseReference tRef = firebaseDatabase.getReference();
     private MapControl mapControl;
-    private String yourTheme; // 상대방이 정한 테마를 받아오는 변수 updatePosition 메소드에서 받음
+    private String yourTheme = null; // 상대방이 정한 테마를 받아오는 변수 updatePosition 메소드에서 받음
 
     private double[] coord_Array = {0, 0}; // latitude, longitude
+    private Pair<Double, Double> centerPos;
+    private NaverMap currentNaverMap;
     // 람다식 내에서 변수를 가져오기 위해 배열을 썼지만 Side Effect 이슈 존재하는 코딩이라고 함
     // 근데 다른 방법은 더 모르겠어서 그냥 씀
 
@@ -146,6 +148,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @SuppressLint("StringFormatMatches")
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
+        currentNaverMap = naverMap;
         UiSettings uiSettings = naverMap.getUiSettings();
         uiSettings.setLocationButtonEnabled(true);
 
@@ -184,7 +187,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pair<Double, Double> centerPos = center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
+                centerPos = center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
 
                 if(centerPos == null){
                     if(!knowMyPos) Toast.makeText(mapActivity, "나의 위치를 찾을 수 없습니다. 재검색 버튼을 눌러주세요.", Toast.LENGTH_LONG).show();
@@ -248,6 +251,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if(dataSnapshot.getKey().toString().equals(friendKey)){
                     yourTheme = dataSnapshot.getValue().toString();
                     Log.d("theme!!!" ,"2 " + yourTheme);
+
+                    centerPos = center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
+
+                    mapControl = new MapControl(mapActivity, String.valueOf(centerPos.right) + "," + String.valueOf(centerPos.left),
+                            currentNaverMap, (Spinner)findViewById(R.id.spinner));
+                    mapControl.run();
                 }
             }
             @Override

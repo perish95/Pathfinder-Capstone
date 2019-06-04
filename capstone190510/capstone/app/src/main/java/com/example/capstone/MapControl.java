@@ -1,5 +1,6 @@
 package com.example.capstone;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Spinner;
@@ -30,6 +31,7 @@ public class MapControl {
     private String prevQuery;
     private boolean possibleGetPlace;
     private NaverPlaceData.places currentReturnPlace;
+    private Marker currentLastMarker;
 
     MapControl(MapActivity mapActivity, String addr, NaverMap naverMap, Spinner spinner) {
         this.mapActivity = mapActivity;
@@ -103,7 +105,15 @@ public class MapControl {
                             markerInfo.setOpenState(State.DETAIL);
                             break;
                         case DETAIL:
-                            markerInfo.infoWindow.close();
+//                            markerInfo.infoWindow.close();
+
+                            if(currentLastMarker != null){
+                                currentLastMarker.setIconTintColor(Color.TRANSPARENT);
+                            }
+
+                            currentLastMarker = markerInfo.marker;
+                            markerInfo.marker.setIconTintColor(Color.RED);
+
                             markerInfo.seeBasic();
                             markerInfo.markerAdapterChange();
                             markerInfo.setOpenState(State.CLOSE);

@@ -65,7 +65,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference("UserInfo");
     private DatabaseReference mRef = firebaseDatabase.getReference("MeetingInfo");
+    private DatabaseReference tRef = firebaseDatabase.getReference();
     private MapControl mapControl;
+    private String yourTheme; // 상대방이 정한 테마를 받아오는 변수 updatePosition 메소드에서 받음
 
     private double[] coord_Array = {0, 0}; // latitude, longitude
     // 람다식 내에서 변수를 가져오기 위해 배열을 썼지만 Side Effect 이슈 존재하는 코딩이라고 함
@@ -196,6 +198,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 //경도 위도 순서
                 mapControl = new MapControl(mapActivity, String.valueOf(centerPos.right) + "," + String.valueOf(centerPos.left),
                         naverMap, (Spinner)findViewById(R.id.spinner));
+                Log.d("spinner!!","" + ((Spinner) findViewById(R.id.spinner)).getSelectedItem().toString());
+                String themeText = ((Spinner) findViewById(R.id.spinner)).getSelectedItem().toString();
+                tRef.child("/ThemeInfo/" + user.get_nickname()).setValue(themeText);
                 mapControl.run();
 
                 // 최종 목적지 반환 받는 예시
@@ -208,9 +213,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     void updatePosition(final String friendKey) { //상대의 위치정보를 얻어오기 위한 메소드
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Log.d("check", "enter for " + dataSnapshot.getValue(User.class).get_nickname());
@@ -223,18 +226,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     calcPosition();
                 }
             }
-
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-            }
-
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
             @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
+        //상대방이 정한 테마 받는 곳
+        tRef.child("ThemeInfo").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getKey().toString().equals(friendKey)){
+                    yourTheme = dataSnapshot.getValue().toString();
+                    Log.d("theme!!!" ,"1 " + yourTheme);
+                }
             }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getKey().toString().equals(friendKey)){
+                    yourTheme = dataSnapshot.getValue().toString();
+                    Log.d("theme!!!" ,"2 " + yourTheme);
+                }
+            }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
@@ -262,6 +283,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private Pair<Double, Double> center_of_two_point(double lat1, double lon1, double lat2, double lon2) {//두 경위도 좌표의 중간 지점의 경위도 좌표
+        double temp = 0;
+        if(lat1 <= lat2){
+            temp = lat1;
+            lat1 = lat2;
+            lat2 = temp;
+        }
         double theta = Math.toRadians(lon2 - lon1);
         lat1 = Math.toRadians(lat1);
         lat2 = Math.toRadians(lat2);

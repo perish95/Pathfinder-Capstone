@@ -116,13 +116,6 @@ public class FriendActivity extends AppCompatActivity {
         updatePromise(); // 약속신청을 받았을 때 구현
 
 
-        /*if (recv.getStringExtra("deli") != null) {
-            Log.d("확인", "객체확인" + recv);
-            Log.d("test", "stinrg" + recv.getStringExtra("deli"));
-            String input = recv.getStringExtra("deli");
-            ((ArrayAdapter) adapter).notifyDataSetChanged();
-        }*/
-
         //친구에게 약속신청을 보내는 버튼 액션
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -158,7 +151,7 @@ public class FriendActivity extends AppCompatActivity {
         });
 
         AlertDialog alert = requestAlt.create();
-        alert.setTitle("Test");
+        alert.setTitle("만남 요청");
         alert.setIcon(R.drawable.ic_launcher_background);
         alert.show();
     }
@@ -214,7 +207,7 @@ public class FriendActivity extends AppCompatActivity {
         });
 
         AlertDialog alert = requestAlt.create();
-        alert.setTitle("Test");
+        alert.setTitle("만남 요청");
         alert.setIcon(R.drawable.ic_launcher_background);
         alert.show();
     }
@@ -240,7 +233,7 @@ public class FriendActivity extends AppCompatActivity {
         });
 
         AlertDialog alert = requestAlt.create();
-        alert.setTitle("Test");
+        alert.setTitle("설 정");
         alert.setIcon(R.drawable.ic_launcher_background);
         alert.show();
     }

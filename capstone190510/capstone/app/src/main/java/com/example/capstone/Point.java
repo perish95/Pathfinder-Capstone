@@ -48,7 +48,8 @@ class Point extends AsyncTask<String, Integer, NaverPlaceData> {
             String query = "음식";
             query = URLEncoder.encode(query, "UTF-8");
             addr = URLEncoder.encode(addr, "UTF-8");
-            String apiURL = "https://naveropenapi.apigw.ntruss.com/map-place/v1/search?query=" + query + "&coordinate=" + addr; // json
+            String apiURL = "https://naveropenapi.apigw.ntruss.com/map-place/v1/search?query=" + query + "&coordinate=" + addr
+                    +"&orderBy=popularity"; // json
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");

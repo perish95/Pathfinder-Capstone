@@ -1,5 +1,6 @@
 package com.example.capstone;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Spinner;
@@ -28,6 +29,10 @@ public class MapControl {
     private LinkedHashMap<Marker, MarkerInfo> markerInfoList = new LinkedHashMap<Marker, MarkerInfo>();
     private Spinner spinner;
     private String prevQuery;
+    private boolean possibleGetPlace;
+    private NaverPlaceData.places currentReturnPlace;
+    private Marker currentLastMarker;
+    private String theme;
 
     MapControl(MapActivity mapActivity, String addr, NaverMap naverMap, Spinner spinner) {
         this.mapActivity = mapActivity;
@@ -37,6 +42,27 @@ public class MapControl {
 
         try {
             placeAndMetro = new Point(addr, spinner).execute().get();
+            placeData = placeAndMetro.left;
+            metroPlaceData = placeAndMetro.right;
+            Toast.makeText(mapActivity,  placeData.distanceCheck(), Toast.LENGTH_LONG).show();
+            // 네트워크 관련 처리는 메인 스레드에서 수행 금지
+            // 따라서 비동기 태스크인 AsyncTask에서 백그라운드로 작업 수행
+            // execute로 실행하고 get으로 doInBackground의 return 값 받아옴
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    MapControl(MapActivity mapActivity, String addr, NaverMap naverMap, String theme) {
+        this.mapActivity = mapActivity;
+        this.addr = addr;
+        this.naverMap = naverMap;
+        this.theme = theme;
+
+        try {
+            placeAndMetro = new Point(addr, theme).execute().get();
             placeData = placeAndMetro.left;
             metroPlaceData = placeAndMetro.right;
             Toast.makeText(mapActivity,  placeData.distanceCheck(), Toast.LENGTH_LONG).show();
@@ -101,14 +127,25 @@ public class MapControl {
                             markerInfo.setOpenState(State.DETAIL);
                             break;
                         case DETAIL:
-                            markerInfo.infoWindow.close();
+//                            markerInfo.infoWindow.close();
+
+                            if(currentLastMarker != null){
+                                currentLastMarker.setIconTintColor(Color.TRANSPARENT);
+                            }
+
+                            currentLastMarker = markerInfo.marker;
+                            markerInfo.marker.setIconTintColor(Color.RED);
+
                             markerInfo.seeBasic();
                             markerInfo.markerAdapterChange();
                             markerInfo.setOpenState(State.CLOSE);
+                            possibleGetPlace = true;
+                            currentReturnPlace = place;
                             break;
                         case CLOSE:
                             markerInfo.infoWindow.open(marker);
                             markerInfo.setOpenState(State.OPEN);
+                            possibleGetPlace = false;
                             break;
                     }
                 }
@@ -180,6 +217,11 @@ public class MapControl {
             marker.setMap(null);
         }
         markerList.clear();
+    }
+
+    public NaverPlaceData.places getPlaceData() {
+        if(possibleGetPlace) return currentReturnPlace;
+        else return null;
     }
 }
 

@@ -18,6 +18,7 @@ import java.net.URLEncoder;
 
 class Point extends AsyncTask<String, Integer, Pair<NaverPlaceData, NaverPlaceData>> {
     Spinner spinner;
+    String theme;
     // 위도
     public double x;
     // 경도
@@ -33,6 +34,11 @@ class Point extends AsyncTask<String, Integer, Pair<NaverPlaceData, NaverPlaceDa
     Point(String addr, Spinner spinner){
         this.addr = addr;
         this.spinner = spinner;
+    }
+
+    Point(String addr, String theme){
+        this.addr = addr;
+        this.theme = theme;
     }
 
     @Override
@@ -57,7 +63,9 @@ class Point extends AsyncTask<String, Integer, Pair<NaverPlaceData, NaverPlaceDa
         String clientSecret = "3PlxCcT6c4kY1Yi9mlAqN0UKDu2K4lVZFfMpAKoH";// 애플리케이션 클라이언트 시크릿값";
 
         try {
-            query = (String) spinner.getSelectedItem();
+            if(spinner != null) query = (String) spinner.getSelectedItem();
+            else if(theme != null) query = theme;
+
             String metroQuery = "전철역";
 
             metroQuery = URLEncoder.encode(metroQuery, "UTF-8");

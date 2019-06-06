@@ -98,7 +98,10 @@ public class FriendActivity extends AppCompatActivity {
         settingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogSetting();
+                Intent it = new Intent(getApplicationContext(), SettingActivity.class);
+                it.putExtra("SentUser", user);
+                startActivity(it);
+                //dialogSetting();
             }
         });
 

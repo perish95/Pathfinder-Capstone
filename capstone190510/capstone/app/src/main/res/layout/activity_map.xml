@@ -5,26 +5,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/map"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    </FrameLayout>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:textAlignment="center">
 
-    <Button
-        android:id="@+id/requestButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="16dp"
-        android:text="RequestTemp"
-        app:layout_constraintBottom_toBottomOf="@+id/map"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/themeTextView"
+                style="@android:style/Widget.Holo.TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="테마"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:entries="@array/theme"
+                android:textAlignment="center" />
+
+        </TableRow>
+
+        <FrameLayout
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="9">
+
+            <EditText
+                android:id="@+id/selectDestText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="clip_horizontal|center_horizontal"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="마커를 터치해 노란색이 되면 만남 장소로 지정됩니다."
+                android:textAlignment="center" />
+        </FrameLayout>
+
+        <TableRow
+            android:id="@+id/tableRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3">
+
+            <Button
+                android:id="@+id/requestButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:background="@drawable/edge"
+                android:text="장소 추천"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/destButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:background="@drawable/edge"
+                android:text="만남 장소 설정"
+                android:textSize="20sp" />
+
+        </TableRow>
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

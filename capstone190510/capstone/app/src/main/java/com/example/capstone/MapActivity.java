@@ -18,7 +18,10 @@ package com.example.capstone;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +30,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -47,6 +51,9 @@ import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -72,6 +79,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private double[] coord_Array = {0, 0}; // latitude, longitude
     private Pair<Double, Double> centerPos;
     private NaverMap currentNaverMap;
+    NaverPlaceData.places lastPlace = null;
+    private boolean isSetLastDest = false;
+    private Marker destMarker = new Marker();
+    private InfoWindow destInfoWindow = new InfoWindow();
     // 람다식 내에서 변수를 가져오기 위해 배열을 썼지만 Side Effect 이슈 존재하는 코딩이라고 함
     // 근데 다른 방법은 더 모르겠어서 그냥 씀
 
@@ -98,12 +109,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d("CHECK", "not enter : " + friendKey);
         updatePosition(friendKey); // partnerLongi, partnerLati에 좌표를 넣어주는 메소드
 
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setDisplayShowHomeEnabled(true);
-//        } // 상단 뒤로가기 버튼 있는 막대
-
         MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         if (mapFragment == null) {
@@ -113,7 +118,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
-
+        isSetLastDest = false;
+        tRef.child("/ThemeInfo/" + user.get_nickname()).child("_isSetLastDest").setValue("false");
     }
 
     @Override
@@ -184,32 +190,56 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         final Button requestButton = (Button) findViewById(R.id.requestButton);
 
         // 요청 버튼에 리스너 달아주고
-        requestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                centerPos = center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
+        requestButton.setOnClickListener(v -> {
+            centerPos = center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
 
-                if(centerPos == null){
-                    if(!knowMyPos) Toast.makeText(mapActivity, "나의 위치를 찾을 수 없습니다. 재검색 버튼을 눌러주세요.", Toast.LENGTH_LONG).show();
-                    else if(!knowYourPos)Toast.makeText(mapActivity, "상대방 위치 정보를 받을 수 없습니다.", Toast.LENGTH_LONG).show();
-                }
+            destInfoWindow.setMap(null);
+            destMarker.setMap(null);
 
-                if(mapControl != null) {
-                    mapControl.removeMarker();
-                    mapControl = null;
-                }
-                //경도 위도 순서
-                mapControl = new MapControl(mapActivity, String.valueOf(centerPos.right) + "," + String.valueOf(centerPos.left),
-                        naverMap, (Spinner)findViewById(R.id.spinner));
-                Log.d("spinner!!","" + ((Spinner) findViewById(R.id.spinner)).getSelectedItem().toString());
-                String themeText = ((Spinner) findViewById(R.id.spinner)).getSelectedItem().toString();
-                tRef.child("/ThemeInfo/" + user.get_nickname()).setValue(themeText);
-                mapControl.run();
-
-                // 최종 목적지 반환 받는 예시
-                // NaverPlaceData.places lastDestination = mapControl.getPlaceData();
-
+            if(centerPos == null){
+                if(!knowMyPos) Toast.makeText(mapActivity, "나의 위치를 찾을 수 없습니다. 재검색 버튼을 눌러주세요.", Toast.LENGTH_LONG).show();
+                else if(!knowYourPos)Toast.makeText(mapActivity, "상대방 위치 정보를 받을 수 없습니다.", Toast.LENGTH_LONG).show();
             }
+
+            if(mapControl != null) {
+                mapControl.removeMarker();
+                mapControl = null;
+            }
+            //경도 위도 순서
+            mapControl = new MapControl(mapActivity, String.valueOf(centerPos.right) + "," + String.valueOf(centerPos.left),
+                    naverMap, (Spinner)findViewById(R.id.spinner));
+            //Log.d("spinner!!","" + ((Spinner) findViewById(R.id.spinner)).getSelectedItem().toString());
+            //String themeText = ((Spinner) findViewById(R.id.spinner)).getSelectedItem().toString();
+            mapControl.run();
+            isSetLastDest = false;
+
+            // 최종 목적지 반환 받는 예시
+            // NaverPlaceData.places lastDestination = mapControl.getPlaceData();
+
+        });
+
+        // 만남 버튼
+        final Button destButton = (Button) findViewById(R.id.destButton);
+
+        destButton.setOnClickListener(v -> {
+            lastPlace = mapControl.getPlaceData();
+            Log.d("selected place : ", String.valueOf(lastPlace));
+            if(lastPlace != null){
+                isSetLastDest = true;
+
+                String themeText = String.valueOf(isSetLastDest);
+                tRef.child("/ThemeInfo/" + user.get_nickname()).child("_destLat").setValue(lastPlace.x);
+                tRef.child("/ThemeInfo/" + user.get_nickname()).child("_destLong").setValue(lastPlace.y);
+                tRef.child("/ThemeInfo/" + user.get_nickname()).child("_isSetLastDest").setValue(themeText);
+                tRef.child("/ThemeInfo/" + user.get_nickname()).child("_name").setValue(lastPlace.name);
+            }
+
+            if(mapControl != null) {
+                mapControl.removeMarker();
+                mapControl = null;
+            }
+
+            finalDestSelect(lastPlace.y, lastPlace.x, lastPlace.name);
         });
     }
 
@@ -249,19 +279,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.getKey().toString().equals(friendKey)){
-                    yourTheme = dataSnapshot.getValue().toString();
+                    yourTheme = dataSnapshot.child("_isSetLastDest").getValue().toString();
+                    double yourDestLong = (double) dataSnapshot.child("_destLong").getValue(), yourDestLat = (double) dataSnapshot.child("_destLat").getValue();
+                    String yourDestName = (String) dataSnapshot.child("_name").getValue();
                     Log.d("theme!!!" ,"2 " + yourTheme);
+                    Log.d("lastDestPos", String.valueOf(yourDestLong));
 
-                    if(mapControl != null) {
-                        mapControl.removeMarker();
-                        mapControl = null;
+                    if(yourTheme.equals("true")){
+                        if(mapControl != null) {
+                            mapControl.removeMarker();
+                            mapControl = null;
+                        }
+
+                        finalDestSelect(yourDestLong, yourDestLat, yourDestName);
+/*
+                        mapControl = new MapControl(mapActivity, String.valueOf(yourDestLong) + "," + String.valueOf(yourDestLat),
+                                currentNaverMap, yourTheme);
+                        mapControl.run();
+                        */
+
+
+                        Log.d("final dest", "Success Entered LastDest");
+                        yourTheme = "false";
                     }
-
-                    centerPos = center_of_two_point(user.latitude, user.longitude, partnerLati, partnerLongi);
-
-                    mapControl = new MapControl(mapActivity, String.valueOf(centerPos.right) + "," + String.valueOf(centerPos.left),
-                            currentNaverMap, yourTheme);
-                    mapControl.run();
                 }
             }
             @Override
@@ -318,6 +358,59 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //        knowYourPos = false;
 //        knowMyPos = false;
         return new Pair<Double, Double>(resLat, resLon);//중간지점 경위도 좌표 반환
+    }
+
+    private void finalDestSelect(double yourDestLong, double yourDestLat, String yourDestName){
+
+        LatLng latLng = new LatLng(yourDestLong, yourDestLat);
+
+        destMarker.setPosition(latLng);
+        destMarker.setMap(currentNaverMap);
+        destMarker.setIconTintColor(Color.RED);
+
+        String content = "최종 목적지" + '\n' + yourDestName;
+        destInfoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(mapActivity) {
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+
+                return (CharSequence) content;
+            }
+        });
+        destInfoWindow.open(destMarker);
+
+        destMarker.setOnClickListener(v -> {
+            String startName = "현위치";
+            String destinationName = yourDestName;
+            try {
+                startName = URLEncoder.encode(startName, "UTF-8");
+                destinationName = URLEncoder.encode(destinationName, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            String url = "nmap://route/public?slat=" + user.latitude + "&slng=" + user.longitude + "&sname=" +
+                    startName + "&dlng=" + yourDestLat + "&dlat=" + yourDestLong + "&dname=" + destinationName +
+                    "&appname=com.example.capstone";
+
+            Log.d("mapurl", url);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            Intent naverIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.nhn.android.nmap"));
+            if (list == null || list.isEmpty()) {
+                getApplicationContext().startActivity(naverIntent);
+            } else {
+                getApplicationContext().startActivity(intent);
+            }
+
+            return true;
+        });
+
+        CameraPosition cameraPosition = new CameraPosition(latLng, 17);
+        currentNaverMap.setCameraPosition(cameraPosition);
     }
 
 }

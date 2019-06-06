@@ -48,9 +48,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="9">
 
+            <EditText
+                android:id="@+id/selectDestText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="clip_horizontal|center_horizontal"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="마커를 터치해 노란색이 되면 만남 장소로 지정됩니다."
+                android:textAlignment="center" />
         </FrameLayout>
 
         <TableRow
+            android:id="@+id/tableRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.3">
@@ -63,6 +73,16 @@
                 android:layout_weight="3"
                 android:background="@drawable/edge"
                 android:text="장소 추천"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/destButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:background="@drawable/edge"
+                android:text="만남 장소 설정"
                 android:textSize="20sp" />
 
         </TableRow>

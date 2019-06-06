@@ -99,9 +99,10 @@ public class SignupActivity extends AppCompatActivity {
                                 NOverlap = true;
                                 break;
                             }
-                            Toast.makeText(SignupActivity.this, "닉네임 생성이 가능합니다!", Toast.LENGTH_SHORT).show();
                             NOverlap = false;
                         }
+                        if(!NOverlap)
+                            Toast.makeText(SignupActivity.this, "닉네임 생성이 가능합니다!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

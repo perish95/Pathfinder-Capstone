@@ -7,11 +7,13 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
-        android:layout_width="410dp"
-        android:layout_height="318dp"
+        android:layout_width="398dp"
+        android:layout_height="319dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:background="#FFFFFF"
+
+        android:background="@drawable/border"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,6 +27,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:background="@drawable/edge"
             android:text="취소"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -39,6 +42,7 @@
             android:layout_width="112dp"
             android:layout_height="47dp"
             android:layout_marginBottom="84dp"
+            android:background="@drawable/edge"
             android:text="검색"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/addButton"
@@ -51,6 +55,7 @@
             android:layout_height="47dp"
             android:layout_marginEnd="96dp"
             android:layout_marginBottom="52dp"
+            android:background="@drawable/edge"
             android:text="추가"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,14 +66,15 @@
             android:layout_width="122dp"
             android:layout_height="45dp"
             android:ems="10"
-            android:hint="친구의 아이디"
+            android:hint="      친구의 닉네임"
             android:inputType="textPersonName"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             app:layout_constraintBottom_toBottomOf="@+id/addButton"
             app:layout_constraintEnd_toStartOf="@+id/searchButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.398" />
+            app:layout_constraintVertical_bias="0.398"
+            android:background="@drawable/edge" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

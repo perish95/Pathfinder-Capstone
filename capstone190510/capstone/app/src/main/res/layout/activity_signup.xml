@@ -15,6 +15,7 @@
         android:layout_marginBottom="22dp"
         android:text="회원가입"
         android:textAlignment="center"
+        android:textColor="#010F11"
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
@@ -155,7 +156,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="전화번호"
+                    android:text="닉네임"
                     android:textSize="18sp" />
 
                 <EditText
@@ -171,18 +172,20 @@
             </LinearLayout>
 
             <Button
-                style="?android:attr/borderlessButtonStyle"
                 android:id="@+id/overlapButton"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="중복확인" />
+                android:text="중복확인"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <Button
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/edge"
             android:text="회원가입" />
 
     </LinearLayout>

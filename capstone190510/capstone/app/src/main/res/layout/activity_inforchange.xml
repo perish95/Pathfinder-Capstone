@@ -24,8 +24,8 @@
             android:id="@+id/nicknameChangeButton"
             android:layout_width="112dp"
             android:layout_height="47dp"
-            android:layout_marginEnd="52dp"
-            android:layout_marginBottom="116dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="148dp"
             android:background="@drawable/edge"
             android:text="닉네임 변경"
             android:textSize="20sp"
@@ -37,10 +37,23 @@
             android:id="@+id/ChangeSecretButton"
             android:layout_width="112dp"
             android:layout_height="47dp"
-            android:layout_marginEnd="52dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="84dp"
             android:background="@drawable/edge"
             android:text="비번 변경"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/enterButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/searchIdText" />
+
+        <Button
+            android:id="@+id/ChangePhoneButton"
+            android:layout_width="112dp"
+            android:layout_height="47dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edge"
+            android:text="전번 변경"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/enterButton"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,8 +63,8 @@
             android:id="@+id/enterButton"
             android:layout_width="75dp"
             android:layout_height="47dp"
-            android:layout_marginEnd="92dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="88dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/edge"
             android:text="확인"
             android:textSize="20sp"
@@ -72,13 +85,13 @@
             app:layout_constraintEnd_toStartOf="@+id/searchButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.318" />
+            app:layout_constraintVertical_bias="0.232" />
 
         <EditText
             android:id="@+id/ChangeSecret"
             android:layout_width="122dp"
             android:layout_height="45dp"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="56dp"
             android:background="@drawable/edge"
             android:ems="10"
             android:hint="      비밀번호 변경"
@@ -89,7 +102,24 @@
             app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.669" />
+            app:layout_constraintVertical_bias="0.484" />
+
+        <EditText
+            android:id="@+id/ChangePhoneNumber"
+            android:layout_width="122dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="56dp"
+            android:background="@drawable/edge"
+            android:ems="10"
+            android:hint="      전화번호 변경"
+            android:inputType="textPersonName"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            app:layout_constraintBottom_toBottomOf="@+id/enterButton"
+            app:layout_constraintEnd_toStartOf="@+id/searchButton"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.751" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

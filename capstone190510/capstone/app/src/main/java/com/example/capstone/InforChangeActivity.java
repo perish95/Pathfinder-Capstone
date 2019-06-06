@@ -42,8 +42,11 @@ public class InforChangeActivity extends AppCompatActivity {
         Button EnterButton = (Button) findViewById(R.id.enterButton);
         Button NicknameChange = (Button) findViewById(R.id.nicknameChangeButton);
         Button SecretNumChange = (Button) findViewById(R.id.ChangeSecretButton);
+        Button PhoneNumChange = (Button) findViewById(R.id.ChangePhoneButton);
+
         EditText searchIdText = (EditText)findViewById(R.id.nicknameChange);
         EditText changeSecretText = (EditText)findViewById(R.id.ChangeSecret);
+        EditText changePhoneNumber= (EditText)findViewById(R.id.ChangePhoneNumber);
 
         EnterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +83,21 @@ public class InforChangeActivity extends AppCompatActivity {
                     FirebaseAuth.getInstance().getCurrentUser().updatePassword(NewNumber);
                     Toast.makeText(InforChangeActivity.this, "비밀번호가 재설정되었습니다!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        PhoneNumChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(changePhoneNumber.getText().toString().trim())) {
+                    Toast.makeText(InforChangeActivity.this, "입력한 값이 없습니다!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    String NewNumber = changePhoneNumber.getText().toString();
+                    databaseReference.child(user.get_nickname()).child("_number").setValue(Integer.parseInt(NewNumber));
+                    Toast.makeText(InforChangeActivity.this, "전화번호가 재설정되었습니다!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

@@ -233,6 +233,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 tRef.child("/ThemeInfo/" + user.get_nickname()).child("_isSetLastDest").setValue(themeText);
                 tRef.child("/ThemeInfo/" + user.get_nickname()).child("_name").setValue(lastPlace.name);
             }
+
+            if(mapControl != null) {
+                mapControl.removeMarker();
+                mapControl = null;
+            }
+
+            finalDestSelect(lastPlace.y, lastPlace.x, lastPlace.name);
         });
     }
 
@@ -284,56 +291,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             mapControl = null;
                         }
 
-                        LatLng latLng = new LatLng(yourDestLong, yourDestLat);
-
-                        destMarker.setPosition(latLng);
-                        destMarker.setMap(currentNaverMap);
-                        destMarker.setIconTintColor(Color.RED);
-
-                        String content = "최종 목적지" + '\n' + yourDestName;
-                        destInfoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(mapActivity) {
-                            @NonNull
-                            @Override
-                            public CharSequence getText(@NonNull InfoWindow infoWindow) {
-
-                                return (CharSequence) content;
-                            }
-                        });
-                        destInfoWindow.open(destMarker);
-
-                        destMarker.setOnClickListener(v -> {
-                            String startName = "현위치";
-                            String destinationName = yourDestName;
-                            try {
-                                startName = URLEncoder.encode(startName, "UTF-8");
-                                destinationName = URLEncoder.encode(destinationName, "UTF-8");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            String url = "nmap://route/public?slat=" + user.latitude + "&slng=" + user.longitude + "&sname=" +
-                                    startName + "&dlng=" + yourDestLat + "&dlat=" + yourDestLong + "&dname=" + destinationName +
-                                    "&appname=com.example.capstone";
-
-                            Log.d("mapurl", url);
-
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                            intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                            List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-                            Intent naverIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.nhn.android.nmap"));
-                            if (list == null || list.isEmpty()) {
-                                getApplicationContext().startActivity(naverIntent);
-                            } else {
-                                getApplicationContext().startActivity(intent);
-                            }
-
-                            return true;
-                        });
-
-                        CameraPosition cameraPosition = new CameraPosition(latLng, 17);
-                        currentNaverMap.setCameraPosition(cameraPosition);
-
+                        finalDestSelect(yourDestLong, yourDestLat, yourDestName);
 /*
                         mapControl = new MapControl(mapActivity, String.valueOf(yourDestLong) + "," + String.valueOf(yourDestLat),
                                 currentNaverMap, yourTheme);
@@ -400,6 +358,59 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //        knowYourPos = false;
 //        knowMyPos = false;
         return new Pair<Double, Double>(resLat, resLon);//중간지점 경위도 좌표 반환
+    }
+
+    private void finalDestSelect(double yourDestLong, double yourDestLat, String yourDestName){
+
+        LatLng latLng = new LatLng(yourDestLong, yourDestLat);
+
+        destMarker.setPosition(latLng);
+        destMarker.setMap(currentNaverMap);
+        destMarker.setIconTintColor(Color.RED);
+
+        String content = "최종 목적지" + '\n' + yourDestName;
+        destInfoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(mapActivity) {
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+
+                return (CharSequence) content;
+            }
+        });
+        destInfoWindow.open(destMarker);
+
+        destMarker.setOnClickListener(v -> {
+            String startName = "현위치";
+            String destinationName = yourDestName;
+            try {
+                startName = URLEncoder.encode(startName, "UTF-8");
+                destinationName = URLEncoder.encode(destinationName, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            String url = "nmap://route/public?slat=" + user.latitude + "&slng=" + user.longitude + "&sname=" +
+                    startName + "&dlng=" + yourDestLat + "&dlat=" + yourDestLong + "&dname=" + destinationName +
+                    "&appname=com.example.capstone";
+
+            Log.d("mapurl", url);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            Intent naverIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.nhn.android.nmap"));
+            if (list == null || list.isEmpty()) {
+                getApplicationContext().startActivity(naverIntent);
+            } else {
+                getApplicationContext().startActivity(intent);
+            }
+
+            return true;
+        });
+
+        CameraPosition cameraPosition = new CameraPosition(latLng, 17);
+        currentNaverMap.setCameraPosition(cameraPosition);
     }
 
 }

@@ -33,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraUpdate;
@@ -237,7 +238,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     void updatePosition(final String friendKey) { //상대의 위치정보를 얻어오기 위한 메소드
+
         databaseReference.addChildEventListener(new ChildEventListener() {
+
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             }
@@ -266,6 +269,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
+        /*
+              databaseReference.addListenerForSingleValueEvent(new ValueEventListener() { //데이터를 한 번만 읽도록 바꾸어줌
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Log.d("check","enter for " + dataSnapshot.getValue(User.class).get_nickname());
+                    Log.d("check","enter for 2 " + friendKey);
+                    Log.d("check2222","enter for2222222222222222222222222222222222222222222222222222222222222 2 " + friendKey);
+                    if(dataSnapshot.getValue(User.class).get_nickname().equals(friendKey)) {
+                        partnerLati = dataSnapshot.getValue(User.class).latitude;
+                        partnerLongi = dataSnapshot.getValue(User.class).longitude;
+                        knowYourPos = true;
+                        calcPosition();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    //Overide
+                }
+            });
+            */
     }
 
     void calcPosition() {

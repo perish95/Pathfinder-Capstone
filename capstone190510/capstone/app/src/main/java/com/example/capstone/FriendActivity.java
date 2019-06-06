@@ -143,6 +143,7 @@ public class FriendActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //Click "yes"
                         requestPromise(partner); //서버로 약속 요청을 하는 메소드
+                        updatePromise();
                     }
                 }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
             @Override
@@ -190,7 +191,7 @@ public class FriendActivity extends AppCompatActivity {
             }
         });
     }
-    private void dialogReceive(String partner, String id) { //내가 요청을 받을 때
+    private void diaogReceive(String partner, String id) { //내가 요청을 받을 때
         AlertDialog.Builder requestAlt = new AlertDialog.Builder(this);
         requestAlt.setMessage(partner + "님이 약속을 신청하였습니다. 수락하시겠습니까?").setCancelable(false).setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
@@ -271,7 +272,7 @@ public class FriendActivity extends AppCompatActivity {
                             if(key.equals(snapshot.getValue().toString())) {
                                 partner = user.friendsMap.get(key);
                                 partnerID = key;
-                                dialogReceive(partner, partnerID);
+                                //dialogReceive(partner, partnerID);
                             }
                         }
                 }

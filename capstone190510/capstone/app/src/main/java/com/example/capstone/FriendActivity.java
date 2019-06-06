@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -115,12 +113,6 @@ public class FriendActivity extends AppCompatActivity {
 
         updatePromise(); // 약속신청을 받았을 때 구현
 
-
-        /*if (recv.getStringExtra("deli") != null) {
-            String input = recv.getStringExtra("deli");
-            ((ArrayAdapter) adapter).notifyDataSetChanged();
-        }*/
-
         //친구에게 약속신청을 보내는 버튼 액션
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -156,7 +148,7 @@ public class FriendActivity extends AppCompatActivity {
         });
 
         AlertDialog alert = requestAlt.create();
-        alert.setTitle("Test");
+        alert.setTitle("만남 요청");
         alert.setIcon(R.drawable.ic_launcher_background);
         alert.show();
     }
@@ -197,7 +189,9 @@ public class FriendActivity extends AppCompatActivity {
                         databaseReference.child(id).child("waitAccept").setValue(true);
                         Intent goMap = new Intent(getApplicationContext(), MapActivity.class);
                         //goMap.putExtra("FriendID", id);
-                        user.myFrined = id;
+                        user.myFriend = id;
+                        Log.d("check", "dialogReceive" + user.myFriend);
+
                         goMap.putExtra("SentUser", user);
                         startActivity(goMap);
                     }
@@ -211,7 +205,7 @@ public class FriendActivity extends AppCompatActivity {
         });
 
         AlertDialog alert = requestAlt.create();
-        alert.setTitle("Test");
+        alert.setTitle("만남 요청");
         alert.setIcon(R.drawable.ic_launcher_background);
         alert.show();
     }
@@ -237,7 +231,7 @@ public class FriendActivity extends AppCompatActivity {
         });
 
         AlertDialog alert = requestAlt.create();
-        alert.setTitle("Test");
+        alert.setTitle("설 정");
         alert.setIcon(R.drawable.ic_launcher_background);
         alert.show();
     }
@@ -278,17 +272,20 @@ public class FriendActivity extends AppCompatActivity {
         //상대가 요청을 받았는지 확인, 내가 요청을 했을 때
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {Log.d("check", "updatePromise not enter " + user.myFriend); }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Log.d("check","enter updatePromise2");
                 if(dataSnapshot.getValue(User.class).waitAccept){
                     Intent sent = new Intent(getApplicationContext(), MapActivity.class);
-                    sent.putExtra("FriendID", friendKey);
-                    user.myFrined = friendKey;
-                    sent.putExtra("SentUser", user);
-                    startActivity(sent);
+                    Log.d("check", "updatePromise not enter " + user.myFriend);
+                    if(friendKey != null) {
+                        user.myFriend = friendKey;
+                        Log.d("check", "updatePromise enter" + user.myFriend);
+                        sent.putExtra("SentUser", user);
+                        startActivity(sent);
+                    }
                 }
             }
             @Override

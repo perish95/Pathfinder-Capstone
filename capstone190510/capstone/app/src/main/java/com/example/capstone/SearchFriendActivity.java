@@ -49,7 +49,6 @@ public class SearchFriendActivity extends Activity implements View.OnClickListen
         cancelButton = (Button) findViewById(R.id.cancelButtton);
         searchIdText = (EditText)findViewById(R.id.searchIdText);
 
-
         addButton.setOnClickListener(this);
         searchButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);

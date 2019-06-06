@@ -15,4 +15,19 @@
     <string name="check_coord">현재 좌표\n(%1$.5f, %2$.5f)</string>
 
     <string name="map_test_button">맵 테스트</string>
+    <string name="format_info_on_marker" />
+    <string name="format_info_on_map" />
+
+    <string-array name="theme">
+        <item>음식</item>
+        <item>카페</item>
+        <item>술집</item>
+        <item>놀거리</item>
+        <item>PC방</item>
+        <item>노래방</item>
+        <item>영화관</item>
+        <item>연극</item>
+        <item>미술관</item>
+        <item>박물관</item>
+    </string-array>
 </resources>

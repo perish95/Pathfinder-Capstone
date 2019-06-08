@@ -222,6 +222,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         final Button destButton = (Button) findViewById(R.id.destButton);
 
         destButton.setOnClickListener(v -> {
+            if(mapControl == null) return;
+
             lastPlace = mapControl.getPlaceData();
             Log.d("selected place : ", String.valueOf(lastPlace));
             if(lastPlace != null){
